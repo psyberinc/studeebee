@@ -15,6 +15,7 @@
     "aws-sdk": "^2.703.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
     "connect-mongo": "^3.2.0",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
@@ -35,6 +36,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.0.1",
     "path": "^0.12.7",
-    "paytm-sdk": "0.0.2"
+    "paytm-sdk": "0.0.2",
+    "popups": "^1.1.3"
   }
 }

@@ -14,8 +14,7 @@ const Blog = require('../models/blogModel');
 // Modules
 const today = require('../modules/dateModule');
 
-// Middleware
-router.use(bodyParser.urlencoded({ extended: true }));
+
 
 //Route
 router

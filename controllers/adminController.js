@@ -15,56 +15,26 @@ const Admin = require('../models/adminModel');
 const Blog = require('../models/blogModel');
 const Course = require('../models/courseModel');
 const liveclass = require('../models/liveclass');
-const user = require('../models/userProfile')
+const user = require('../models/usersModel');
 const Add_quiz = require('../models/Add_quiz');
 const ans = require('../models/q&a')
 // Modules
 let today = require('../modules/dateModule');
 
-var settings=require('../models/settings')
+var settings = require('../models/settings')
 let createContent = require('../modules/createContent');
 const auth = require('../modules/isverified');
 const uploads3 = require('../modules/awsupload');
 const { words, trim } = require('lodash');
 
 
-// Express
-router.use(express.static('public'));
-
-// Router
-
-// Middlewares
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(session({
-    secret: process.env.SECRET_SESSION_ADMIN,
-    resave: true,
-    saveUninitialized: false
-}));
-
-// Passport Init
-// router.use(passport.initialize());
-// router.use(passport.session());
-passport.use('local.admin', Admin.createStrategy());
-
-passport.serializeUser(function (user, done) {
-    console.log(user);
-    done(null, admin.id);
-});
-passport.deserializeUser(function (user, done) {
-    Admin.find({_id:user},(err,user)=>{
-        console.log(user);
-        done(err,user);
-    })
-    // done(null, admin);
-});
-
 //Function which check login part never open when you are already authenticated
-const IsNotAuthenicated = function(req,res,next){
-    if(!req.isAuthenticated()){
-       return next();
-  }else{
-      res.redirect('/');
-  }
+const IsNotAuthenicated = function (req, res, next) {
+    if (!req.isAuthenticated()) {
+        return next();
+    } else {
+        res.redirect('/');
+    }
 }
 
 
@@ -108,14 +78,11 @@ function checkFileType(file, cb) {
 // add-courses Upload Set Field
 var videoContentUpload = uploads3.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'sectionFile' }])
 
-
-
-// Routes
 // Routes
 router
     .route('/dashboard')
     .get((req, res) => {
-        console.log(req.user[0].username);
+        // console.log("dashboard " + req.user[0].username);
         if (req.isAuthenticated()) {
             user.find({})
                 .then((user) => {
@@ -127,7 +94,7 @@ router
                         })
 
                 })
-            console.log(req.user);
+            // console.log(req.user);
         } else {
             res.redirect('/admin/login');
         }
@@ -316,12 +283,16 @@ router
     .route('/logout')
     .get((req, res) => {
         req.logout;
+        // req.flash('success_msg','You are logged out')
         res.redirect('/admin/login');
+        req.session.destroy();
+    
+    
     })
 
 router
     .route('/login')
-    .get(IsNotAuthenicated,(req, res) => {
+    .get(IsNotAuthenicated, (req, res) => {
         res.render('admin/login', { layout: 'backend', login: true });
     })
     .post((req, res) => {
@@ -398,7 +369,7 @@ router
         }
     })
 
-    router
+router
     .route('/user-profile')
     .get((req, res) => {
         if (req.isAuthenticated()) {
@@ -406,7 +377,7 @@ router
                 if (!err) {
                     if (!foundItems) {
                         const newadminProfile = new Admin({
-                           
+
                             fullname: ' ',
                             state: ' ',
                             city: ' ',
@@ -420,7 +391,7 @@ router
                         res.redirect('/admin/user-profile');
                     } else {
                         res.render('admin/admin_profile', {
-                            
+
                             fullname: foundItems.fullname,
                             state: foundItems.college,
                             phone: foundItems.phone,
@@ -435,12 +406,12 @@ router
                 }
             })
             // console.log(req.admin);
-           
+
         } else {
             res.redirect('/admin/login');
         }
     })
-    .post( (req, res) => {
+    .post((req, res) => {
         Admin.findOneAndUpdate(req.user.id,
             {
                 $set:
@@ -456,7 +427,7 @@ router
                     city: req.body.city,
                     // instagram: req.body.instagram
                 }
-            },{ new: true, useFindAndModify: false }, (err, d) => {
+            }, { new: true, useFindAndModify: false }, (err, d) => {
                 if (err) console.log(err);
                 else {
                     res.redirect('/admin/user-profile');
@@ -464,57 +435,57 @@ router
             });
     })
 
-    router.post('/adminpassword',(req,res,next)=>{
-Admin.findOne(req.user.id)
-.then((user)=>{
-if(req.body.newPassword == req.body.confirmPassword){
-    user.changePassword(req.body.oldPassword,req.body.newPassword)
-    .then(()=>{
-        res.redirect(req.get('referer'))
-        next()
-    })
-}else{
-    req.toastr.error("passwords do not match")
-    res.redirect('/admin/dashboard');
-    next()
-}
-})
+router.post('/adminpassword', (req, res, next) => {
+    Admin.findOne(req.user.id)
+        .then((user) => {
+            if (req.body.newPassword == req.body.confirmPassword) {
+                user.changePassword(req.body.oldPassword, req.body.newPassword)
+                    .then(() => {
+                        res.redirect(req.get('referer'))
+                        next()
+                    })
+            } else {
+                req.toastr.error("passwords do not match")
+                res.redirect('/admin/dashboard');
+                next()
+            }
+        })
 })
 
 
-    router
+router
     .route('/google-recaptcha')
     .get((req, res) => {
         if (req.isAuthenticated()) {
             // console.log(req.admin);
-            res.render('admin/google_captcha',{layout:"backend"});
+            res.render('admin/google_captcha', { layout: "backend" });
         } else {
             res.redirect('/admin/login');
         }
     })
-    router
+router
     .route('/maintenance')
     .get((req, res) => {
         if (req.isAuthenticated()) {
             // console.log(req.admin);
-            res.render('admin/maintenance',{layout:"backend"});
+            res.render('admin/maintenance', { layout: "backend" });
         } else {
             res.redirect('/admin/login');
         }
     })
-    .post( (req, res) => {
+    .post((req, res) => {
 
-        if(req.body.enable == "on"){
-            settings.findOneAndUpdate({name:"studybee"},{$set:{maintenance_title:req.body.maintenance_title,maintenance_description:req.body.maintenance_description,maintenance:"true"}})
-            .then((settings)=>{
-                res.render('admin/maintenance',{layout:'backend'})
-            })
+        if (req.body.enable == "on") {
+            settings.findOneAndUpdate({ name: "studybee" }, { $set: { maintenance_title: req.body.maintenance_title, maintenance_description: req.body.maintenance_description, maintenance: "true" } })
+                .then((settings) => {
+                    res.render('admin/maintenance', { layout: 'backend' })
+                })
         }
-        else if(req.body.disable == "on"){
-            settings.findOneAndUpdate({name:"studybee"},{$set:{maintenance:"false"}})
-            .then((settings)=>{
-                res.render('admin/maintenance',{layout:'backend'})
-            })
+        else if (req.body.disable == "on") {
+            settings.findOneAndUpdate({ name: "studybee" }, { $set: { maintenance: "false" } })
+                .then((settings) => {
+                    res.render('admin/maintenance', { layout: 'backend' })
+                })
         }
         // Admin.findOneAndUpdate(req.user.id,
         //     {
@@ -534,10 +505,10 @@ if(req.body.newPassword == req.body.confirmPassword){
 
 router
     .route('/seo-tool')
-    .get((req,res)=>{
+    .get((req, res) => {
         if (req.isAuthenticated()) {
             // console.log(req.admin);
-            res.render('admin/seotools',{layout:"backend"});
+            res.render('admin/seotools', { layout: "backend" });
         } else {
             res.redirect('/admin/login');
         }
@@ -545,9 +516,6 @@ router
 
 
 module.exports = router;
-
-
-
 
 function newFunction() {
     return require('aws-sdk');

@@ -1,12 +1,6 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+
 var router = express.Router();
-
-// Express
-router.use(express.static('public'));
-
-// Middleware
-router.use(bodyParser.urlencoded({ extended: true }));
 
 
 
@@ -46,6 +40,7 @@ router
             res.render('liveClasses/class-intro', { layout: 'main' });
         }
         else{
+           req.flash('error_msg','Please Enroll youself');
             res.redirect('/live-classes/')
         }
        

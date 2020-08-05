@@ -2,7 +2,7 @@
 const express = require('express');
 var router = express.Router();
 const liveclass = require('../models/liveclass');
-const passport = require('passport');
+const passport = require('../modules/passport');
 
 //Model
 const Instructor = require('../models/instructor');
@@ -14,7 +14,7 @@ const smtpEmail = require('../modules/verifyEmail');
 // Passport Init
 router.use(passport.initialize());
 router.use(passport.session());
-passport.use('instructor-login', Instructor.createStrategy());
+
 passport.serializeUser(function (user, done) {
     done(null, user.id,user.username);
 });

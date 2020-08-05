@@ -1,13 +1,8 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const { getVideoDurationInSeconds } = require('get-video-duration')
 var router = express.Router();
 const checksum_lib = require('../paytm/checksum');
-// Express
-router.use(express.static('public'));
 
-// Middleware
-router.use(bodyParser.urlencoded({ extended: true }));
 
 // Models
 const Course = require('../models/courseModel');

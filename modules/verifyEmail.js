@@ -26,15 +26,15 @@ module.exports.verifyEmail = (SenderHost, reciever) => {
         subject: "Please confirm your Email account", //Subject
         html: `<strong>Welcome to StudeeBee</strong>. Some Greate things are just a click away. Please Click on the link to verify your email. <a href="${link}">Click here to verify</a>` //Message
     }
-    console.log(mailOptions);
+    // console.log(mailOptions);
     smtpTransport.sendMail(mailOptions, function(error, response) {
         if (error) {
             status = false;
-            console.log(error);
+            // console.log(error);
         } else {
             status = true;
-            console.log(nodemailer.getTestMessageUrl(response));
-            console.log(`Message Sent! Id: ${response.messageId}\nMessage: ${response.message}`);
+            // console.log(nodemailer.getTestMessageUrl(response));
+            // console.log(`Message Sent! Id: ${response.messageId}\nMessage: ${response.message}`);
         }
     });
     return [rand, status];

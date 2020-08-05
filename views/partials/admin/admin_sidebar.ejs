@@ -5,18 +5,22 @@
     <div class="ttr-sidebar-wrapper content-scroll">
         <!-- side menu logo start -->
         <div class="ttr-sidebar-logo">
-            <a href="#"><img alt="" src="admin/assets/images/logo.png" width="122" height="27"></a>
+            <!-- <a href="#"><img alt="" src="/assets/images/favicon.png" width="122" height="27"> <b> hello name<%= user.username %> </b></a> -->
             <!-- <div class="ttr-sidebar-pin-button" title="Pin/Unpin Menu">
                 <i class="material-icons ttr-fixed-icon">gps_fixed</i>
                 <i class="material-icons ttr-not-fixed-icon">gps_not_fixed</i>
             </div> -->
             <div class="ttr-sidebar-toggle-button">
+                
                 <i class="ti-arrow-left"></i>
             </div>
         </div>
         <!-- side menu logo end -->
         <!-- sidebar menu start -->
         <nav class="ttr-sidebar-navi">
+            <a href="/admin/dashboard/#"><img alt="" src="/admin/assets/images/favicon.png" width="25" height="25">
+                <span class="ttr-label"><b><%= admindata[0].username %> </b></span>
+            </a>
             <ul>
                 <li>
                     <a href="/admin/dashboard" class="ttr-material-button">

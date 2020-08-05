@@ -10,12 +10,12 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   username:{
     type: String,
-    required:true,
+    
     trim:true,
   },
   email: {
     type: String,
-    required: true,
+    
     trim: true,
   },
   password: {
@@ -38,6 +38,16 @@ const userSchema = new Schema({
   accessToken: {
     type: String,
   },
+  fullName: String,
+  phone: String,
+  college: String,
+  address: String,
+  postcode: String,
+  linkedin: String,
+  facebook: String,
+  twitter: String,
+  instagram: String,
+  image:String,
   
   resetPasswordToken: {type:String},
   resetPasswordExpires: {type:Date},

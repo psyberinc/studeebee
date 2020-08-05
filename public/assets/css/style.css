@@ -49,6 +49,7 @@
 
 .sticky-top {
     top: 100px;
+    z-index: 998;
 }
 
 .header {

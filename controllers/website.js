@@ -9,10 +9,9 @@ const User = require('../models/usersModel');
 const Blog = require('../models/blogModel');
 const { route } = require("./userController");
 const Course = require("../models/courseModel");
+const Contact=require("../models/Get_in_Touch");
 
-// Middleware
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(express.static('public'));
+
 
 
 // Get Routes
@@ -58,7 +57,18 @@ router
     .get((req, res) => {
         res.render('studeebee/contact',{layout:'main'})
     })
-
+    .post((req,res)=>{
+        // console.log("Hello= "+req.body.fname+ req.body.email+req.body.subject);
+        Contact.create({
+            name: req.body.fname,
+            email: req.body.email,
+            subject: req.body.subject,
+            phno: req.body.phno,
+            message: req.body.message,
+        })
+        res.redirect('/contact-us');
+        // res.json(req.body);
+    })
 router
     .route('/private-policy')
     .get((req, res) => {
@@ -76,5 +86,7 @@ router
     .get((req, res) => {
         res.render('studeebee/membership',{layout:'main'})
     })
+
+
 
 module.exports = router;

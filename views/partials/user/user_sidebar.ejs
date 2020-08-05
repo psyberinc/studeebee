@@ -7,10 +7,12 @@
 
         <div class="card">
             <nav class="ttr-sidebar-navi">
-
-                <a href="#"><img alt="" src="admin/assets/images/favicon.png" width="25" height="25">
-                    <span class="ttr-label"><b>Dharmik Valani</b></span>
-                </a>
+                <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img src="/uploads/<%= userdata[0].image %>"style="                                    
+                    height: 100%;
+                    width: 121%;" alt=""/></span><b>     <%= userdata[0].username %> </b></a>
+                <!-- <a href="/user/dashboard/#"><img alt="" src="/uploads/ " width="25" height="25">
+                    <span class="ttr-label"></span>
+                </a> -->
 
 
                 <ul>
@@ -32,12 +34,7 @@
                             <span class="ttr-label">My Courses</span>
                         </a>
                     </li>
-                    <!-- <li>
-                        <a href="/user/messages" class="ttr-material-button">
-                            <span class="ttr-icon"><i class="ti-comments"></i></span>
-                            <span class="ttr-label">Messages</span>
-                        </a>
-                    </li> -->
+                   
                     <li>
                         <a href="/user/wishlist" class="ttr-material-button">
                             <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
@@ -46,7 +43,7 @@
                     </li>
 
                     <li>
-                        <a href="/user/purchase-history" class="ttr-material-button">
+                        <a href="/user/dashboard/#" class="ttr-material-button">
                             <span class="ttr-icon"><i class="ti-view-list"></i></span>
                             <span class="ttr-label">Purchase History</span>
                         </a>

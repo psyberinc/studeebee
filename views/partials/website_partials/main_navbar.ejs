@@ -15,9 +15,13 @@
                 </div>
                 <div class="topbar-right">
                     <ul>
-                        <li><a href="/instructor/login">Instructor</a></li>
-                        <li><a href="/user/login">Login</a></li>
-                        <li><a href="/user/register">Register</a></li>
+                        <% if (isAuth) { %>
+                        <%} else {%>
+                            <li><a href="/instructor/login">Instructor</a></li>
+                            <li><a href="/user/login">Login</a></li>
+                            <li><a href="/user/register">Register</a></li>
+                        <% } %>
+                        
                     </ul>
                 </div>
             </div>
@@ -60,25 +64,38 @@
                                 </div>
                             </li>
                             <li>
-                                <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img src="admin/assets/images/prof.jpg"style="                                    
-                                    height: 100%;
+                                <%if ( isAuth==true){%>
+                                <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img src="/uploads/<%= userdata[0].image %>"style="                                    
+                                    height: 30px;
                                     width: 121%;" alt=""/></span></a>
                                 <div class="ttr-header-submenu">
-                                    <%if ( isAuth==true){%>
+                                    
                                     <ul>
                                         
-                                        <li><a href="/user/profile">My profile</a></li>
-                                        <!-- <li><a href="/user/messages">Messages</a></li> -->
+                                        <li><a href="/user/dashboard">My Dashboard</a></li>
+                                       
                                         <li><a href="/user/logout">Logout</a></li>
                                     </ul>
-                                    <%} else{%>
-                                        <ul>
+                                    <!-- <ul>
                                         
-                                            <li><a href="/user/register">SignUp</a></li>
-                                            <li><a href="/user/login">Login</a></li>
-                                        </ul>
-                                        <%}%>
+                                        <li><a href="/instructor/dashboard">My Dashboard</a></li>
+                                       
+                                        <li><a href="/instructor/logout">Logout</a></li>
+                                    </ul> -->
+                                       
+                                        
                                 </div>
+                                <%} else{%>
+                                    <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img src="/assets/images/favicon.png"style="                                    
+                                        height: 100%;
+                                        width: 121%;" alt=""/></span></a>
+                                    <div class="ttr-header-submenu" >
+                                         <ul>
+                                            <li><a href="/user/register"><span class="fa-user"></span>SignUp</a></li>
+                                            <li><a href="/user/login"><span class="fa-sign-in"></span>Login</a></li>
+                                        </ul>
+                                    </div>
+                                <%}%>
                             </li>
                         </ul>
                         <!-- header right menu end -->
