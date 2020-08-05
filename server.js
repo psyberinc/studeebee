@@ -36,7 +36,7 @@ app.use(express.static('public'))
 app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
-app.set('lyout', 'main', 'backend', 'user');
+app.set( 'main', 'backend', 'user');
 //session
 app.use(session(
   {
