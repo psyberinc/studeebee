@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const express = require('express');
 const bodyParser = require('body-parser');
 var router = express.Router();
-
+var nodemailer=require('nodemailer')
 //Models
 const User = require('../models/usersModel');
 const Blog = require('../models/blogModel');
@@ -57,18 +57,52 @@ router
     .get((req, res) => {
         res.render('studeebee/contact',{layout:'main'})
     })
-    .post((req,res)=>{
-        // console.log("Hello= "+req.body.fname+ req.body.email+req.body.subject);
-        Contact.create({
-            name: req.body.fname,
-            email: req.body.email,
-            subject: req.body.subject,
-            phno: req.body.phno,
-            message: req.body.message,
-        })
-        res.redirect('/contact-us');
-        // res.json(req.body);
-    })
+    .post(function(req,res){
+        // Settings.findOne({name:'srudeebee'})
+        // .then((setting)=>{
+          // console.log(setting);
+          var smtpTransport = nodemailer.createTransport({
+            service: "Gmail",
+            auth: {
+                user: "seo@psyber.co",
+                pass: process.env.EMAIL_PASS,
+              
+              }
+            
+          });
+          
+          var mailOptions;
+          mailOptions={
+            from: req.body.email,
+            to : "seo@psyber.co",
+            subject : "Hi, "+req.body.email+" wants to contact u"+" regarding "+req.body.subject,
+            html : "<html><p>Hi i am, "+req.body.fname+","+req.body.message+".<br> Best regards,"+req.body.fname+"Please Contact "+req.body.phno+"</p></html>"
+            }
+            smtpTransport.sendMail(mailOptions, function(error, response){
+            if(error){
+                    // console.log(error);
+                    res.end("error");
+            }else{
+                    res.redirect(req.get('referer'))
+                    // console.log("Message sent: " + response.message);
+                }
+            }); 
+        // })
+      
+      })
+      
+    // .post((req,res)=>{
+    //     // console.log("Hello= "+req.body.fname+ req.body.email+req.body.subject);
+    //     Contact.create({
+    //         name: req.body.fname,
+    //         email: req.body.email,
+    //         subject: req.body.subject,
+    //         phno: req.body.phno,
+    //         message: req.body.message,
+    //     })
+    //     res.redirect('/contact-us');
+    //     // res.json(req.body);
+    // });
 router
     .route('/private-policy')
     .get((req, res) => {
@@ -86,6 +120,7 @@ router
     .get((req, res) => {
         res.render('studeebee/membership',{layout:'main'})
     })
+
 
 
 

@@ -38,15 +38,9 @@ var storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
 })
-
-
-//
 // Google SignIn Route
-// _______________________________________________________ //
-
 router.get('/auth/google',
     passport.authenticate('google', { scope: ['profile', 'email'] }));
-
 router.get('/auth/google/studeebee',
     passport.authenticate('google', { failureRedirect: '/user/login' }),
     function (req, res) {
@@ -54,11 +48,7 @@ router.get('/auth/google/studeebee',
         console.log(req.user);
         res.redirect('/user/dashboard');
     });
-
-
-//
 // Facebook SignIn Route
-// _______________________________________________________ //
 router.get('/auth/facebook',
     passport.authenticate('facebook', { scope: ['public_profile', 'email'] }));
 
@@ -68,24 +58,16 @@ router.get('/auth/facebook/studeebee',
         // Successful authentication, redirect home.
         res.redirect('/user/dashboard');
     });
-
-
-
 // Routes
-
 router
     .route('/dashboard')
     .get((req, res) => {
-
         if (req.isAuthenticated()) {
-            // res.json({"hello":"hi"});
-            console.log("hello",req.user);
-            res.render('user/dashboard', { layout: 'main' });
+            res.render('user2/dashboard', { layout: 'user' });
         } else {
             res.redirect('/user/login');
         }
     });
-
 router
     .route('/courses')
     .get((req, res) => {
@@ -93,13 +75,12 @@ router
             UserEnrolledCourses.findOne({ user_id: req.user }).populate('enrolled')
                 .exec()
                 .then((item) => {
-                    res.render('user/courses', { course: item.enrolled, layout: 'main' });
+                    res.render('user2/courses', { course: item.enrolled, layout: 'user' });
                 })
         } else {
             res.redirect('/user/login');
         }
     })
-
 router
     .route('/learn-course/:course_name/:course_id')
     .get((req, res) => {
@@ -117,10 +98,8 @@ router
                         })
                         .then((question) => {
 
-                            res.render('user/lectures', { list: question, course: foundItems, videoUrl: req.query.video, layout: 'main' });
+                            res.render('user2/lecture', { list: question, course: foundItems, videoUrl: req.query.video,layout:'blank' });
                         })
-                    // console.log(foundItems)
-
                 }
             })
         } else {
@@ -130,9 +109,9 @@ router
 router
     .route("/learn-course/:course_id")
     .post((req, res) => {
-        ans.findOneAndUpdate({ courseId: req.params.course_id }, { $push: { question: { title: req.body.title, description: req.body.description, user: req.user } } }, { new: true, useFindAndModify: false })
-            // console.log("----->"title,"---->"+description)
-
+        console.log("course id",req.params.course_id);
+        console.log("data ",req.body);
+        ans.findOneAndUpdate({ courseId: req.params.course_id }, { $push: { question: { title: req.body.title, description: req.body.description, user: req.user[0].id } } }, { new: true, useFindAndModify: false })
             .then(() => {
                 res.redirect(req.get('referer'))
                 // res.json(req.body)
@@ -150,26 +129,18 @@ router
                 ans.question[req.params.questionNo].answer.push(arr);
                 ans.save();
                 res.redirect(req.get('referer'))
-                // res.json(req.body)
             })
     })
-
-
 router
     .route('/messages')
     .get((req, res) => {
-        res.render('user/messages', { layout: 'main' });
+        res.render('user2/messages', { layout: 'user' });
     })
-
 router
     .route('/live-class')
     .get((req, res) => {
-        res.render('user/live', { layout: 'main' });
+        res.render('user2/live', { layout: 'user' });
     })
-
-
-
-
 router
     .route('/wishlist')
     .get((req, res) => {
@@ -177,7 +148,7 @@ router
             UserEnrolledCourses.findOne({ user_id: req.user }).populate('wishlist')
                 .exec()
                 .then((item) => {
-                    res.render('user/wishlist', { layout: 'main', course: item.wishlist.reverse() });
+                    res.render('user2/wishlist', { layout: 'user', course: item.wishlist.reverse() });
                 })
         } else {
             res.redirect('/user/login');
@@ -210,18 +181,17 @@ router
             res.redirect('/user/login')
         }
     })
-
 router
     .route('/enrolled')
     .post((req, res) => {
         let course_id = req.query.id;
         let course_name = req.query.name;
         if (req.isAuthenticated()) {
-            UserEnrolledCourses.findOne({ user_id: req.user }, (err, foundItems) => {
+            UserEnrolledCourses.findOne({ user_id: req.user[0].id }, (err, foundItems) => {
                 if (!err) {
                     if (!foundItems) {
                         const newEnrolled = new UserEnrolledCourses({
-                            user_id: req.user,
+                            user_id: req.user[0].id,
                             enrolled: []
                         })
                         newEnrolled.enrolled.push(course_id);
@@ -246,9 +216,8 @@ router
     .get((req, res) => {
         if (req.isAuthenticated()) {
             User.findById(req.user , (err, foundItems) => {
-                console.log(foundItems);
                 if (!err) {                    
-                        res.render('user/userProfile', {
+                        res.render('user2/userProfile', {
                            
                             fullName: foundItems.fullName,
                             cllg: foundItems.college,
@@ -259,7 +228,7 @@ router
                             facebook: foundItems.facebook,
                             twitter: foundItems.twitter,
                             instagram: foundItems.instagram,
-                            layout: 'main'
+                            layout: 'user'
                         });                    
                 }
             })
@@ -285,17 +254,11 @@ router
             , (err, d) => {
                 if (err) console.log(err);
                 else {
-                    // console.log(d)
                     res.redirect('/user/profile');
                 };
             });
     })
-
-
 // Signin-Signout Routes
-
-
-
 router
     .route('/login')
     .get(IsNotAuthenicated, (req, res) => {
@@ -304,7 +267,6 @@ router
     .post(
         (req, res) => {
             passport.authenticate('local')(req, res, function () {
-                // console.log("hello user");
                 res.redirect('/user/dashboard');
             });
         }
@@ -314,7 +276,6 @@ router
     .route('/loginlive')
     .post((req, res) => {
         passport.authenticate('local')(req, res, function () {
-            // console.log("hello user");
             res.redirect('/live-classes/live-class2');
         });
     })
@@ -338,7 +299,7 @@ router
                  facebook: ' ',
                  twitter: ' ',
                  instagram: ' ',
-                 image: ' ',
+                 image: 'favicon.png',
                   registerToken: rand 
             },
                  req.body.password, function (err, user) {
@@ -349,7 +310,6 @@ router
             else {
 
                 passport.authenticate('local')(req, res, function () {
-                    // console.log("heloooooo")
                     res.render('studeebee/login', { layout: 'main' });
                 });
 
@@ -395,12 +355,9 @@ router
         Quiz.findOne({ courseid: req.params.id })
             .then((quiz) => {
                 if (quiz) {
-                    res.render('courses/quiz', { layout: 'main', quiz: quiz });
-                }
+                    res.render('courses/quiz', { layout: 'main', quiz: quiz });}
                 else { res.send("quiz not found") }
-            })
-    })
-
+            });});
 router.post('/checkquiz/:id', (req, res) => {
     let answerarr = [];
     let correct = 0;
@@ -427,7 +384,7 @@ router.post('/checkquiz/:id', (req, res) => {
 })
 
 router.get('/certificate', (req, res) => {
-    res.render('user/certificate', { layout: 'main' });
+    res.render('user2/certificate', { layout: 'user' });
 })
 
 router

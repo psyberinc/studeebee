@@ -54,7 +54,7 @@
                     <div class="ttr-header-right ttr-with-seperator">
                         <!-- header right menu start -->
                         <ul class="ttr-header-navigation">
-                            <li>
+                            <!-- <li>
                                 <a href="#" class="ttr-material-button ttr-submenu-toggle" style="color: #29303B;padding-top: 4px;"><i class="fa fa-bell"></i></a>
                                 <div class="ttr-header-submenu noti-menu">
                                     <div class="ttr-notify-header">
@@ -62,26 +62,38 @@
                                         <span class="ttr-notify-text">User Notifications</span>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
                             <li>
                                 <%if ( isAuth==true){%>
-                                <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img src="/uploads/<%= userdata[0].image %>"style="                                    
+                                <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img src="/uploads/<%= user[0].image %>"style="                                    
                                     height: 30px;
                                     width: 121%;" alt=""/></span></a>
                                 <div class="ttr-header-submenu">
+                                    <% if (user[0].role==='student') { %>
+                                        <ul>
+                                        
+                                            <li><a href="/user/dashboard">My Dashboard</a></li>
+                                           
+                                            <li><a href="/user/logout">Logout</a></li>
+                                        </ul>
+                                    <% } else if (user[0].role==='admin') { %>
+                                        <ul>
+                                        
+                                            <li><a href="/admin/dashboard">My Dashboard</a></li>
+                                           
+                                            <li><a href="/admin/logout">Logout</a></li>
+                                        </ul>
                                     
+                                        <%} else{%>
                                     <ul>
                                         
-                                        <li><a href="/user/dashboard">My Dashboard</a></li>
-                                       
-                                        <li><a href="/user/logout">Logout</a></li>
-                                    </ul>
-                                    <!-- <ul>
-                                        
-                                        <li><a href="/instructor/dashboard">My Dashboard</a></li>
+                                        <li><a href="/instructor/">My Dashboard</a></li>
                                        
                                         <li><a href="/instructor/logout">Logout</a></li>
-                                    </ul> -->
+                                    </ul>
+                                    <% } %>
+                                   
+                                    
                                        
                                         
                                 </div>

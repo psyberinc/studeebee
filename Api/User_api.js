@@ -27,38 +27,6 @@ const IsNotAuthenicated = function (req, res, next) {
     }
 }
 
-
-//
-// Google SignIn Route
-// _______________________________________________________ //
-
-router.get('/auth/google',
-    passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-router.get('/auth/google/studeebee',
-    passport.authenticate('google', { failureRedirect: '/user/login' }),
-    function (req, res) {
-        // Successful authentication, redirect dashboard.
-        console.log(req.user);
-        res.redirect('/user/dashboard');
-    });
-
-
-//
-// Facebook SignIn Route
-// _______________________________________________________ //
-router.get('/auth/facebook',
-    passport.authenticate('facebook', { scope: ['public_profile', 'email'] }));
-
-router.get('/auth/facebook/studeebee',
-    passport.authenticate('facebook', { failureRedirect: '/user/login' }),
-    function (req, res) {
-        // Successful authentication, redirect home.
-        res.redirect('/user/dashboard');
-    });
-
-
-
 // Routes
 
 router
@@ -73,7 +41,46 @@ router
             res.json({err:'Error occured'})
         }
     });
+    router
+    .route('/course')
+    .get((req, res) => {
+        let filter = req.query.filter;
+        Course.find({}, function (err, foundItem) {
+            if (!err) {
+                if (foundItem) {
+                    res.json(foundItem)
+                }
+            }
+        })
+    })
+    router
+    .route('/:courseName/:id')
+    .get((req, res) => {
+        let courseName = req.params.courseName;
+        let id = req.params.id;
+        Course.findOne({ _id: id }, function (err, foundItem) {
+            if (!err) {
+                if (foundItem) {
+                    let totalLectures = 0;
+                    foundItem.content.forEach((item) => {
+                        totalLectures = item.sectionVideoTitle.length + totalLectures;
 
+                    })
+                    // let totalVideoDuration = 0;
+                    // foundItem.content.forEach((item) => {
+                    //     item.sectionVideoUrl.forEach((videoUrl) => {
+                    //         getVideoDurationInSeconds(videoUrl).then((duration) => {
+                    //             console.log(duration);
+                    //             totalVideoDuration = duration + totalVideoDuration;
+                    //         })
+                    //     })
+                    // })
+                    res.json({course:foundItem,totalLectures: totalLectures});
+                    // res.render('courses/course_details', { course: foundItem, totalLectures: totalLectures,layout:'main'});
+                }
+            }
+        })
+    })
 // router
 //     .route('/courses')
 //     .get((req, res) => {
@@ -320,7 +327,7 @@ router
             passport.authenticate('local')(req, res, function () {
                 // console.log("hello user");
                 // res.redirect('/user/dashboard');
-                res.json(req.user[0]);
+                res.json(req.user);
             });
         }
     );

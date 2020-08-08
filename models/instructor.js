@@ -41,6 +41,17 @@ const userSchema = new Schema({
   accessToken: {
     type: String,
   },
+    
+    fullName: String,
+    occupation:String,
+    companyname:String,
+    address: String,
+    postcode: String,
+    linkedin: String,
+    facebook: String,
+    twitter: String,
+    image:String,
+    instagram: String
 });
 
 

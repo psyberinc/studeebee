@@ -28,7 +28,7 @@ router
 router
     .route('/live-class2')
     .get((req, res) => {
-        console.log(req.isAuthenticated());
+        // console.log(req.isAuthenticated());
         res.redirect('/live-classes/')
     });
 

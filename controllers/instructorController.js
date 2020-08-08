@@ -3,6 +3,7 @@ const express = require('express');
 var router = express.Router();
 const liveclass = require('../models/liveclass');
 const passport = require('../modules/passport');
+const multer=require('multer');
 
 //Model
 const Instructor = require('../models/instructor');
@@ -12,15 +13,8 @@ const InstructorProfile=require('../models/instructorprofile');
 const smtpEmail = require('../modules/verifyEmail');
 
 // Passport Init
-router.use(passport.initialize());
-router.use(passport.session());
 
-passport.serializeUser(function (user, done) {
-    done(null, user.id,user.username);
-});
-passport.deserializeUser(function (user, done) {
-    done(null, user);
-});
+
 
 const IsNotAuthenicated = function (req, res, next) {
     if (!req.isAuthenticated()) {
@@ -29,80 +23,63 @@ const IsNotAuthenicated = function (req, res, next) {
         res.redirect('/');
     }
 }
+
+var storage = multer.diskStorage({
+    destination: process.cwd() + '/public/uploads/',
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + file.originalname);
+    }
+});
+const upload = multer({
+    storage: storage,
+})
 //Instructor Dashboard
 router.get('/', (req, res, next) => {
     liveclass.find({})
         .then((list) => {
             if (req.isAuthenticated()) {
 
-                res.render('instructor/selectcourses', { list: list, layout: 'main' });
+                res.render('instructor/selectcourses', { list: list, layout: 'instructor' });
             } else {
                 res.redirect('/instructor/login');
             }
         });
 });
-
-
 //Profile edit
-
-// router.get('/profile', (req, res, next) => {
-//     if (req.isAuthenticated()) {
-//         res.render('instructor/instructorProfile', { layout: 'main' });
-//     } else {
-//         res.redirect('/instructor/login');
-//     }
-// })
 router
     .route('/profile')
     .get((req, res) => {
         if (req.isAuthenticated()) {
-            InstructorProfile.findOne({ userId: req.user }, (err, foundItems) => {
+            // console.log("helllo",req.user[0].id)
+            Instructor.findById(req.user[0].id, (err, foundItems) => {
+                // console.log("found items=",foundItems)
                 if (!err) {
-                    if (!foundItems) {
-                        const newUserProfile = new InstructorProfile({
-                            userId: req.user,
-                            fullName: ' ',
-                            phone: ' ',
-                            occupation:' ',
-                            companyname:' ',
-                            address: ' ',
-                            postcode: ' ',
-                            linkedin: ' ',
-                            facebook: ' ',
-                            twitter: ' ',
-                            instagram: ' ',
-                        });
-                        newUserProfile.save();
-                        res.redirect('/instructor/profile');
-                    } else {
-                        res.render('instructor/instructorProfile', {
-                            userId: foundItems.userId,
-                            fullName: foundItems.fullName,
-                            occupation:foundItems.occupation,
-                            companyname:foundItems.companyname,
-                            phone: foundItems.phone,
-                            address: foundItems.address,
-                            postcode: foundItems.postcode,
-                            linkedin: foundItems.linkedin,
-                            facebook: foundItems.facebook,
-                            twitter: foundItems.twitter,
-                            instagram: foundItems.instagram,
-                            layout: 'main'
-                        });
-                    }
+                    res.render('instructor/instructorProfile', {
+                        
+                        fullName: foundItems.fullName,
+                        occupation:foundItems.occupation,
+                        companyname:foundItems.companyname,
+                        phone: foundItems.phone,
+                        address: foundItems.address,
+                        postcode: foundItems.postcode,
+                        linkedin: foundItems.linkedin,
+                        facebook: foundItems.facebook,
+                        twitter: foundItems.twitter,
+                        instagram: foundItems.instagram,
+                        layout: 'instructor'
+                    });
+                    
                 }
             })
         } else {
             res.redirect('/instructor/login');
         }
     })
-    .post((req, res) => {
-        InstructorProfile.findOneAndUpdate({ userId: req.user },
-            {
-                $set:
-                {
+    .post(upload.single('image'),(req, res) => {
+        Instructor.findByIdAndUpdate(req.user,
+            {       image:req.file.filename,
                     fullName: req.body.fullName,
-                    phone: req.body.phone,
+                    phno: req.body.phno,
                     occupation:req.body.occupation,
                     companyname:req.body.companyname,
                     address: req.body.address,
@@ -111,8 +88,8 @@ router
                     facebook: req.body.facebook,
                     twitter: req.body.twitter,
                     instagram: req.body.instagram
-                }
-            }, (err, d) => {
+            },
+             (err, d) => {
                 if (err) console.log(err);
                 else {
                     // console.log(d)
@@ -121,15 +98,9 @@ router
             });
     })
 
-
-
-
-
-
-
 router.get('/question-answer', (req, res, next) => {
     if (req.isAuthenticated()) {
-        res.render('instructor/queans', { layout: 'main' });
+        res.render('instructor/queans', { layout: 'instructor' });
     } else {
         res.redirect('/instructor/login');
     }
@@ -143,13 +114,8 @@ router
     .get(IsNotAuthenicated, (req, res) => {
         res.render('instructor/login', { layout: "main", login: true });
     })
-    .post((req, res) => {
-        console.log("hello userdata ", req.body);
-        console.log(res.data);
-        console.log(res.body);
+    .post((req, res) => {        
         passport.authenticate('instructor-login')(req, res, function () {
-            console.log("hello user ", req.body);
-            console.log(res.data);
             res.redirect('/instructor/');
         });
 
@@ -165,7 +131,23 @@ router
         [rand, status] = smtpEmail.verifyEmail(req.get('host'), req.body.email);
 
         // console.log(rand, status);
-        Instructor.register({ username: req.body.username, email: req.body.email, phno: req.body.phno, registerToken: rand }, req.body.password, function (err, user) {
+        Instructor.register(
+            { username: req.body.username,
+                email: req.body.email,
+                phno: req.body.phno,
+                fullName: ' ',
+                occupation:' ',
+                companyname:' ',
+                address: ' ',
+                postcode: ' ',
+                linkedin: ' ',
+                facebook: ' ',
+                twitter: ' ',
+                instagram: ' ',
+                image:'favicon.png',
+                registerToken: rand 
+            }, 
+                req.body.password, function (err, user) {
             if (err) {
                 console.log(err);
                 res.redirect('/instructor/register');

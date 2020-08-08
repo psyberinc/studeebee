@@ -1,0 +1,70 @@
+<header class="ttr-header" style="background: #29303B;">
+    <div class="ttr-header-wrapper">
+        <!--sidebar menu toggler start -->
+        <div class="ttr-toggle-sidebar ttr-material-button">
+            <i class="ti-close ttr-open-icon"></i>
+            <i class="ti-menu ttr-close-icon"></i>
+        </div>
+        <!--sidebar menu toggler end -->
+        <!--logo start -->
+        <!-- <div class="ttr-logo-box">
+            <div>
+                <a href="/home" class="ttr-logo">
+                    <img alt="" class="ttr-logo-mobile" src="/admin/assets/images/logo.png" width="30" height="30">
+                </a>
+            </div>
+        </div> -->
+        <!--logo end -->
+        <div class="ttr-header-menu">
+            <!-- header left menu start -->
+            <ul class="ttr-header-navigation">
+                <li>
+                    <a href="/" class="ttr-material-button ttr-submenu-toggle">HOME</a>
+                </li>
+                <li>
+                    <a href="#" class="ttr-material-button ttr-submenu-toggle">QUICK MENU <i
+                            class="fa fa-angle-down"></i></a>
+                    <div class="ttr-header-submenu">
+                        <ul>
+                            <li><a href="/courses">Explore Courses</a></li>
+                            <li><a href="/blogs">Blogs</a></li>
+                            <!-- <li><a href="/membership">Become a Member</a></li> -->
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <!-- header left menu end -->
+        </div>
+        <div class="ttr-header-right ttr-with-seperator">
+            <!-- header right menu start -->
+            <ul class="ttr-header-navigation">
+                <li>
+                    <a href="#" class="ttr-material-button ttr-submenu-toggle"><i class="fa fa-bell"></i></a>
+                    <div class="ttr-header-submenu noti-menu">
+                        <div class="ttr-notify-header">
+                            <span class="ttr-notify-text-top">9 New</span>
+                            <span class="ttr-notify-text">User Notifications</span>
+                        </div>
+                        <%- include('./user_notification1'); -%>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img
+                                alt="" src="/uploads/<%= user[0].image %>" width="32"
+                                height="32"></span></a>
+                    <div class="ttr-header-submenu">
+                        <ul>
+                                        
+                            <li><a href="/user/dashboard">My Dashboard</a></li>
+                           
+                            <li><a href="/user/logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <!-- header right menu end -->
+        </div>
+        <!-- No Need for User -->
+        
+    </div>
+</header>

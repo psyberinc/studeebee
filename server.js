@@ -11,7 +11,8 @@ var path = require('path');
 var expressLayouts = require('express-ejs-layouts');
 const passport = require('passport');
 const flash = require('connect-flash');
-// External Modeles
+
+// External Modules
 const userController = require('./controllers/userController');
 var settings = require('./models/settings')
 const adminController = require('./controllers/adminController');
@@ -36,7 +37,7 @@ app.use(express.static('public'))
 app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
-app.set( 'main', 'backend', 'user');
+app.set( 'main','blank', 'backend', 'user');
 //session
 app.use(session(
   {
@@ -58,12 +59,9 @@ app.use(function (req, res, next) {
   res.locals.session = req.session;
   res.locals.login = req.login;
   if (req.user) {
+
     res.locals.isAuth = true;
-    res.locals.user = req.user;
-    res.locals.userdata=req.user;
-    res.locals.admindata=req.user;
-    res.locals.instdata=req.user;
-    
+    res.locals.user = req.user; 
     next();
   } else {
     res.locals.isAuth = false,
@@ -80,6 +78,8 @@ app.use((req,res,next)=>{
     next();
 })
 
+// Api Route
+app.use('/api', ApiController);
 // Admin Route
 app.use('/admin', adminController);
 app.use(function (req, res, next) {
@@ -126,8 +126,7 @@ app.get('/search/', (req, res) => {
 
 })
 
-// Api Route
-app.use('/api', ApiController);
+
 
 // Listen to Port
 app.listen(PORT, () => {

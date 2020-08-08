@@ -1,40 +1,33 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-
 //Models
 const User = require('../models/usersModel');
 const Admin = require('../models/adminModel');
 const Instructor = require('../models/instructor');
-
-
-
 passport.serializeUser(function (user, done) {
-    // console.log("checking user "+user);
     done(null, user.id);
 });
 passport.deserializeUser((id,done)=>{
     User.find({_id:id},(err,user)=>{
-        // console.log(Object.values(user));
         if(user.length == 0){
-            Admin.find({_id:id},(err,user1)=>{
-                // console.log("comeing "+user1);
-                done(err,user1);
+            Admin.find({_id:id},(err,user1)=>{                
+                if(user1.length ===0 ){
+                    Instructor.find({_id:id},(err,user2)=>{                        
+                        done(err,user2);
+                    })    
+                }
+                else{
+                    done(err,user1);
+                }
             })
         }
         else{
-            
                 done(err,user);
-           
         }
     })
 })
 
-/*
-------------------------
-User 
-------------------------
-*/
 passport.use(User.createStrategy());
 
 // Use Passport Google Strategy
@@ -107,19 +100,6 @@ passport.use(new FacebookStrategy({
         });
     }
 ));
-
-
-/*
-------------------------
-Admin 
-------------------------
-*/
 passport.use('local.admin', Admin.createStrategy());
-
-/*
-------------------------
-Instructor
-------------------------
-*/
 passport.use('instructor-login', Instructor.createStrategy());
 module.exports= passport;
