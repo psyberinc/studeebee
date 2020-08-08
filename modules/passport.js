@@ -69,7 +69,7 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/user/auth/facebook/studeebee",
+    callbackURL: "https://studeebee.in/user/auth/facebook/studeebee",
     enableProof: true,
     profileFields: ['id', 'email', 'displayName']
 },
