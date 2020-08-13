@@ -502,6 +502,22 @@ router.post('/reset/:token', function (req, res) {
         res.redirect('/');
     });
 });
-
+//Change password route
+router.post('/changepassword', (req, res, next) => {
+    User.findById(req.user[0].id)
+        .then((user) => {
+            if (req.body.newPassword === req.body.confirmPassword) {
+                user.changePassword(req.body.oldPassword, req.body.newPassword)
+                    .then(() => {
+                        res.redirect(req.get('referer'))
+                        next()
+                    })
+            } else {
+                req.toastr.error("passwords do not match")
+                res.redirect('/user/dashboard');
+                next()
+            }
+        })
+})
 // Exporting router
 module.exports = router;

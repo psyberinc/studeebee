@@ -15,7 +15,7 @@
         <!-- sidebar menu start -->
         <nav class="ttr-sidebar-navi">
             <a href="/admin/dashboard/#"><img alt="" src="/admin/assets/images/favicon.png" width="25" height="25">
-                <span class="ttr-label"><b><%= user[0].username %> </b></span>
+                <span class="ttr-label"><b><%= user[0].fullname %> </b></span>
             </a>
             <ul>
                 <li>
@@ -35,6 +35,12 @@
                     <a href="/admin/add-course" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-calendar"></i></span>
                         <span class="ttr-label">Add Course</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/live-class" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
+                        <span class="ttr-label">Live Classes</span>
                     </a>
                 </li>
                 <li>

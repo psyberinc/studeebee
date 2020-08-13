@@ -147,8 +147,7 @@ router
         if (req.isAuthenticated()) {
             User.findById(req.user , (err, foundItems) => {
                 if (!err) {                    
-                        // res.render('user2/userProfile', {
-                           
+                        // res.render('user2/userProfile', {  
                         //     fullName: foundItems.fullName,
                         //     cllg: foundItems.college,
                         //     phone: foundItems.phone,

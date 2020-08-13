@@ -18,6 +18,8 @@ const liveclass = require('../models/liveclass');
 const user = require('../models/usersModel');
 const Add_quiz = require('../models/Add_quiz');
 const ans = require('../models/q&a')
+const Instructor = require('../models/instructor');
+
 // Modules
 let today = require('../modules/dateModule');
 
@@ -85,12 +87,12 @@ router
         // console.log("dashboard " + req.user[0].username);
         if (req.isAuthenticated()) {
             user.find({})
-                .then((user) => {
+                .then((student) => {
                     Course.find({})
                         .then((course) => {
                             // console.log(course);
 
-                            res.render("admin/dashboard", { user: user, course: course, layout: 'backend' });
+                            res.render("admin/dashboard", { student: student, course: course, layout: 'backend' });
                         })
 
                 })
@@ -286,8 +288,8 @@ router
         // req.flash('success_msg','You are logged out')
         res.redirect('/admin/login');
         req.session.destroy();
-    
-    
+
+
     })
 
 router
@@ -336,7 +338,13 @@ router
         if (req.isAuthenticated()) {
             Course.find({})
                 .then((categorys) => {
-                    res.render('admin/add_liveclass', { layout: 'backend', categorys: categorys });
+                    Instructor.find({})
+                        .then((instructor) => {
+                            // console.log(course);
+                            res.render('admin/add_liveclass', { layout: 'backend', categorys: categorys, instructor: instructor });
+
+                        })
+
 
                 })
             // console.log(req.admin);
@@ -345,30 +353,49 @@ router
         }
     })
     .post(upload.single('thumbnail'), (req, res) => {
+        var filepath=path.join('/uploads')+'/'+req.file.filename;
         if (req.isAuthenticated()) {
 
 
             liveclass.create({
                 title: req.body.title,
                 category: req.body.category,
+                instructor: req.body.instuctorname,
                 level: req.body.level,
-                language: req.body.language,
-                date: req.body.date,
+                day: req.body.day,
+                month: req.body.month,
                 time1: req.body.time1,
                 time2: req.body.time2,
-                prereq: req.body.prereq,
-                description: req.body.description,
-                thumbnail: req.file.filename,
+                link: req.body.meetlink,
+                thumbnail:filepath,
             })
 
 
             // console.log(req.body);
-            res.render('admin/dashboard', { layout: 'backend' });
+            res.redirect('/admin/add-live-class')
         } else {
             res.redirect('/admin/login');
         }
     })
+router
+    .route('/live-class')
+    .get((req, res) => {
+        liveclass.find({})
+            .then((data) => {
+                // console.log("data=",data);
+                res.render('admin/Liveclasses', { layout: 'backend', liveclass: data });
 
+            })
+        // res.render('admin/Liveclasses',{layout:'backend'})
+    })
+router
+    .route('/live-class-delete/:id')
+    .get((req, res) => {
+        liveclass.findByIdAndDelete({ _id: req.params.id })
+            .then(() => {
+                res.redirect('/admin/live-class')
+            })
+    })
 router
     .route('/user-profile')
     .get((req, res) => {
@@ -436,9 +463,9 @@ router
     })
 
 router.post('/adminpassword', (req, res, next) => {
-    Admin.findOne(req.user.id)
+    Admin.findById(req.user[0].id)
         .then((user) => {
-            if (req.body.newPassword == req.body.confirmPassword) {
+            if (req.body.newPassword === req.body.confirmPassword) {
                 user.changePassword(req.body.oldPassword, req.body.newPassword)
                     .then(() => {
                         res.redirect(req.get('referer'))
@@ -487,19 +514,6 @@ router
                     res.render('admin/maintenance', { layout: 'backend' })
                 })
         }
-        // Admin.findOneAndUpdate(req.user.id,
-        //     {
-        //         $set:
-        //         {
-        //             // image: req.file.filename,
-        //             // instagram: req.body.instagram
-        //         }
-        //     },{ new: true, useFindAndModify: false }, (err, d) => {
-        //         if (err) console.log(err);
-        //         else {
-        //             res.redirect('/admin/user-profile');
-        //         };
-        //     });
     })
 
 

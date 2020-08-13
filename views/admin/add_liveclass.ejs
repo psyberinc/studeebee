@@ -49,65 +49,86 @@
 											</select>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-6">
-                                                <label class="col-form-label">Language</label>
+                                           
+                                            <div class="seperator"></div>
+                                            <div class="form-group col-12">
+                                                <label class="col-form-label">Instructor Name</label>
                                                 <div>
-                                                    <input class="form-control" type="text" value="" name="language">
+                                                    <select id="instuctorname" name="instuctorname" placeholder="Instructor">
+                                                <% for( var i=0;i<instructor.length;i++) {%>
+                                                    <option>Select  </option>
+                                                    <option value="<%=instructor[i].fullName%>"><%=instructor[i].fullName%></option>
+                                                    <%}%>
+                                                   
+											</select>
                                                 </div>
                                             </div>
-                                            <div class="seperator"></div>
-
                                             <!-- Level 2: About the course -->
                                             <div class="col-12 m-t20">
+
                                                 <div class="ml-auto">
                                                     <h3 class="m-form__section">2. About </h3>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-6">
-                                                <label class="col-form-label">Course Date</label>
+                                            <div class="form-group col-2">
+                                                <label class="col-form-label">Day</label>
                                                 <div>
-                                                    <input class="form-control" type="date" value="" name="date">
+                                                    <select id="" name="day">
+                                                    <% for( let i = 1; i <=31; i++ ) { %>
+                                                        
+                                                        <option ><%=i%></option>
+                                                    <% } %>
+                                                    </select>
+                                                    
                                                 </div>
                                             </div>
+                                            <div class="form-group col-2">
+                                                <label class="col-form-label">Month</label>
+                                                <div>
+                                                   <select name="month"> 
+                                                       <option >January</option>
+                                                       <option>Feburary</option>
+                                                       <option>March</option>
+                                                       <option>April</option>
+                                                       <option>May</option>
+                                                       <option>June</option>
+                                                       <option>July</option>
+                                                       <option>August</option>
+                                                       <option>September</option>
+                                                       <option>October</option>
+                                                       <option>November</option>
+                                                       <option>December</option>
+                                                   </select>
+                                                </div>
+                                            </div>
+                                           
                                             <div class="form-group  col-6">
                                                 <label class="col-form-label">Course Time(AM-PM)</label>
                                                 <div class="form-group row">
                                                     <label class="col-form-label">From</label>
                                                     <div class="col-3">
 
-                                                        <input class="form-control" type="text" placeholder="7 AM" value="" name="time1">
+                                                        <input class="form-control" type="time" placeholder="7 AM" value="" name="time1">
                                                     </div>
                                                     <label class="col-form-label">to</label>
                                                     <div class="col-3">
 
-                                                        <input class="form-control" type="text" placeholder="10 AM" value="" name="time2">
+                                                        <input class="form-control" type="time" placeholder="10 AM" value="" name="time2">
                                                     </div>
                                                 </div>
 
                                             </div>
-                                            <!-- <div class="form-group col-3">
-                                                <label class="col-form-label">Course Time</label>
-                                                <div>
-                                                    <input class="form-control" type="text" value="" name="language">
-                                                </div>
-                                            </div> -->
-                                            <!-- Pre Requisite and Course Outcome-->
-                                            <div class="form-group col-12">
-                                                <label class="col-form-label">Prerequisites (If Any)</label>
-                                                <div>
-                                                    <textarea class="form-control" name="prereq"> </textarea>
-                                                </div>
-                                            </div>
+                                          
                                             <!-- Detailed Description -->
                                             <div class="col-12 m-t20">
                                                 <div class="ml-auto m-b5">
-                                                    <h3>3. Description of the course</h3>
+                                                    <h3>3. Class joining Link</h3>
                                                 </div>
                                             </div>
                                             <div class="form-group col-12">
-                                                <label class="col-form-label">Course description</label>
+                                                <label class="col-form-label">Link</label>
                                                 <div>
-                                                    <textarea class="form-control" name="description"> </textarea>
+                                                    <input class="form-control" type="text"  name="meetlink">
                                                 </div>
                                             </div>
                                             <div class="col-12 m-t20">

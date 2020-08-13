@@ -1,0 +1,68 @@
+
+
+	<!--Main container start -->
+	<main class="ttr-wrapper">
+		<div class="container-fluid">
+			<div class="db-breadcrumb">
+				<h4 class="breadcrumb-title">Live Classes</h4>
+				<ul class="db-breadcrumb-list">
+					<li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+					<li>Live Classes</li>
+				</ul>
+			</div>
+			<div class="row">
+                <div class="col-lg-12 m-b30">
+                    <div class="widget-box">
+                        <div class="wc-title">
+                            <h4>Orders</h4>
+                        </div>
+                        <div class="widget-inner">
+                            <div class="orders-list">
+                                <!-- <ul>
+                                    <li>
+                                        <span class="orders-title">
+                                            <a href="#" class="orders-title-name">Anna Strong </a>
+                                            <span class="orders-info">Order #02357 | Date 12/08/2019</span>
+                                        </span>
+                                        <span class="orders-btn">
+                                            <a href="#" class="btn button-sm red">Unpaid</a>
+                                        </span>
+                                    </li>
+                                   
+
+                                </ul> -->
+                                <table class="table table-borderless">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Instructor Name</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Starting Time</th>
+                                        <th scope="col">End Time</th>
+                                        <th scope="col">Remove</th>
+                                        
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for( let i = 0; i < liveclass.length; i++ ) { %>
+                                      <tr>
+                                        <th scope="row"><%= i+1 %> </th>
+                                        <td><%= liveclass[i].title %> </td>
+                                        <td><%= liveclass[i].instructor %> </td>
+                                        <td><%= liveclass[i].day %> <%= liveclass[i].month %> </td>
+                                        <td><%= liveclass[i].time1 %> </td>
+                                        <td><%= liveclass[i].time2 %> </td>
+                                        <td ><a href="/admin/live-class-delete/<%= liveclass[i].id %>" class="btn"><span class="fa fa-trash"></span></a> </td>
+                                      </tr>
+                                      <% } %>
+                                    </tbody>
+                                  </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</main>
+	<div class="ttr-overlay"></div>

@@ -2,15 +2,21 @@ const express = require('express');
 
 var router = express.Router();
 
-
-
+//Model
+const Liveclass=require('../models/liveclass');
 
 // Routes
 
 router
     .route('/')
     .get((req, res) => {
-        res.render('liveClasses/live_event', { layout: 'main' });
+        Liveclass.find({})
+            .then((data) => {
+                // console.log("data=",data);
+                res.render('liveClasses/live_event', { layout: 'main',liveclass:data });
+
+            })
+        
     })
 
 router
@@ -18,7 +24,7 @@ router
     .get((req, res) => {
         console.log(req.isAuthenticated());
         if (req.isAuthenticated()) {
-            console.log(req.user);
+            // console.log(req.user);
 
             res.render('user/dashboard', { layout: 'main' });
         } else {
@@ -33,11 +39,16 @@ router
     });
 
 router
-    .route('/class-intro')
+    .route('/class-intro/:id')
     .get((req, res) => {
         if(req.isAuthenticated()){
-            
-            res.render('liveClasses/class-intro', { layout: 'main' });
+            Liveclass.findById({_id:req.params.id})
+            .then((data) => {
+                // console.log("data=",data);
+                res.render('liveClasses/class-intro', { layout: 'main',liveclass:data });
+
+            })
+            // res.render('liveClasses/class-intro', { layout: 'main' });
         }
         else{
            req.flash('error_msg','Please Enroll youself');

@@ -1,7 +1,5 @@
 // Dependencies
 const mongoose = require('mongoose')
-
-
 // Variables
 const Schema = mongoose.Schema;
 
@@ -9,16 +7,15 @@ liveclass = new Schema({
    title: String,
    category: String,
    level: String,
-   language: String,
-   date:String,
+   instructor: String,
+   day:String,
+   month:String,
    time1:String,
     time2:String,
-    prereq:String,
-    description:String,
+    link:String,
     thumbnail:String
-
 })
 
-const Blog = mongoose.model("liveclass", liveclass);
+const Liveclass = mongoose.model("liveclass", liveclass);
 
-module.exports = Blog;
+module.exports = Liveclass;
