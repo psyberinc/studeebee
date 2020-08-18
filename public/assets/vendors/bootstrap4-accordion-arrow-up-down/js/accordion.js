@@ -1,13 +1,1 @@
-(function ($) {  
-			$(document).ready(function(){
-			$(".ac-label").click(function(e){
-				e.preventDefault();
-				$check = $(this).prev();
-				if($check.prop('checked'))
-					$check.prop( "checked", false );
-				else 
-					$check.prop( "checked", true );
-				});
-
-			});
-		})(jQuery);
+!function(c){c(document).ready(function(){c(".ac-label").click(function(e){e.preventDefault(),$check=c(this).prev(),$check.prop("checked")?$check.prop("checked",!1):$check.prop("checked",!0)})})}(jQuery);
