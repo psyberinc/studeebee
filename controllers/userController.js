@@ -158,11 +158,11 @@ router
         let course_id = req.query.id;
         let course_name = req.query.name;
         if (req.isAuthenticated()) {
-            UserEnrolledCourses.findOne({ user_id: req.user }, (err, foundItems) => {
+            UserEnrolledCourses.findOne({ user_id: req.user[0].id }, (err, foundItems) => {
                 if (!err) {
                     if (!foundItems) {
                         const newEnrolled = new UserEnrolledCourses({
-                            user_id: req.user,
+                            user_id: req.user[0].id,
                             wishlist: [],
                         })
                         newEnrolled.wishlist.push(course_id);
@@ -215,7 +215,7 @@ router
     .route('/profile')
     .get((req, res) => {
         if (req.isAuthenticated()) {
-            User.findById(req.user , (err, foundItems) => {
+            User.findById(req.user[0].id , (err, foundItems) => {
                 if (!err) {                    
                         res.render('user2/userProfile', {
                            
@@ -237,7 +237,7 @@ router
         }
     })
     .post(upload.single('image'),(req, res) => {
-        User.findByIdAndUpdate(req.user,
+        User.findByIdAndUpdate(req.user[0].id,
             
                 {   image:req.file.filename,
                     fullName: req.body.fullName,
@@ -300,20 +300,16 @@ router
                  twitter: ' ',
                  instagram: ' ',
                  image: 'favicon.png',
-                  registerToken: rand 
-            },
+                  registerToken: rand  },
                  req.body.password, function (err, user) {
             if (err) {
                 console.log(err);
                 res.redirect('/user/register');
             }
             else {
-
                 passport.authenticate('local')(req, res, function () {
                     res.render('studeebee/login', { layout: 'main' });
-                });
-
-            }
+                });            }
         })
     });
 router

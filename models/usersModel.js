@@ -1,11 +1,8 @@
 // Dependencies
 const mongoose = require("mongoose");
 const passportLocalMongoose = require('passport-local-mongoose');
-
 // Variables
 const Schema = mongoose.Schema;
-
-
 // Model
 const userSchema = new Schema({
   username:{

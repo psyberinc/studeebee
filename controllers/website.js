@@ -91,18 +91,7 @@ router
       
       })
       
-    // .post((req,res)=>{
-    //     // console.log("Hello= "+req.body.fname+ req.body.email+req.body.subject);
-    //     Contact.create({
-    //         name: req.body.fname,
-    //         email: req.body.email,
-    //         subject: req.body.subject,
-    //         phno: req.body.phno,
-    //         message: req.body.message,
-    //     })
-    //     res.redirect('/contact-us');
-    //     // res.json(req.body);
-    // });
+ 
 router
     .route('/private-policy')
     .get((req, res) => {

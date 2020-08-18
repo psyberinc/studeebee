@@ -21,6 +21,7 @@ courseSchema = new Schema({
     createdAt:Date,
     LastUpdatedAt:Date,
     content: Array,
+   
     approved:{type:Boolean, default:false, enum:[true,false]}
 },{strict : false});
 // videoCategories:[{

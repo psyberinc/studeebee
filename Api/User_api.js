@@ -36,9 +36,161 @@ var storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
 })
-// Routes
+// Routes for coureses
+router
+    .route('/free-course')
+    .get((req, res) => {
+        var arr=[];
+       Course.find({}, function (err, foundItem) {
+            if (!err) {
+                for(var i=0;i<foundItem.length;i++){
+                    if(foundItem[i].price ===0){
+                        arr.push(foundItem[i])
+                    
+                    }
+                }
+                res.json({data: arr});
+            }
+        })
+    })
+router
+    .route('/paid-course')
+    .get((req, res) => {
+        var arr=[];
+       Course.find({}, function (err, foundItem) {
+            if (!err) {
+                for(var i=0;i<foundItem.length;i++){
+                    if(foundItem[i].price >0){
+                        arr.push(foundItem[i])
+                    
+                    }
+                }
+                res.json({data: arr});
+            }
+        })
+    })
+//To enroll courses
+router
+    .route('/enroll-course')
+    .post((req, res) => {
+        let course_id = req.body.courseId;
+        let token = req.body.token
+       // if (req.isAuthenticated()) {
+            UserEnrolledCourses.findOne({ user_id: token }, (err, foundItems) => {
+                if (!err) {
+                    if (!foundItems) {
+                        const newEnrolled = new UserEnrolledCourses({
+                            user_id: token,
+                            enrolled: []
+                        })
+                        newEnrolled.enrolled.push(course_id);
+                        newEnrolled.save()
 
+                        res.json({ msg: "Course added",enroll:newEnrolled });
+                    } else if (foundItems) {
+                        if (!foundItems.enrolled.includes(course_id)) {
+                            foundItems.enrolled.push(course_id)
+                            foundItems.save();
+                        }
 
+                        res.json({ msg: "Course added" });
+                    }
+                }
+            })
+        // } else {
+
+            // res.json({ msg: "please Send correct token and courseid" });
+        // }
+    })
+//To Show enrolled courses
+router
+    .route('/enrolled-courses')
+    .post((req, res) => {
+        token=req.body.token
+        // if (req.isAuthenticated()) {
+            UserEnrolledCourses.findOne({ user_id: token }).populate('enrolled')
+                .exec()
+                .then((item) => {
+                    // res.render('user2/courses', { course: item.enrolled, layout: 'user' });
+                    res.json({data:item.enrolled})
+                })
+        // } else {
+        //     // res.redirect('/user/login');
+        //     res.json({msg:"please send valid token"})
+        // }
+    })
+router
+    .route('/wishlistshow-course')
+    .post((req, res) => {
+        token = req.body.token;
+        // if (token === req.user[0].id) {
+            UserEnrolledCourses.findOne({ user_id: token }).populate('wishlist')
+                .exec()
+                .then((item) => {
+                    // res.render('user2/wishlist', { layout: 'user', course: item.wishlist.reverse() });
+                    res.json({ data: item.wishlist.reverse() })
+                })
+        // } else {
+            // res.redirect('/user/login');
+            // res.json({ msg: "Invalid token" });
+        // }
+    })
+router
+    .route('/wishlistadd-course')
+    .post((req, res) => {
+        let course_id = req.body.courseId;
+        let token = req.body.token
+       // if (req.isAuthenticated()) {
+            UserEnrolledCourses.findOne({ user_id: token }, (err, foundItems) => {
+                if (!err) {
+                    if (!foundItems) {
+                        const newEnrolled = new UserEnrolledCourses({
+                            user_id: token,
+                            wishlist: [],
+
+                        })
+                        newEnrolled.wishlist.push(course_id);
+                        newEnrolled.save()
+                        // res.redirect(`/courses/${course_name}/${course_id}`);
+                        res.json({ msg: "added to wishlist" });
+                    } else if (foundItems) {
+                        if (!foundItems.wishlist.includes(course_id)) {
+                            foundItems.wishlist.push(course_id)
+                            foundItems.save();
+                        }
+                        // res.redirect(`/courses/${course_name}/${course_id}`);
+                        res.json({ msg: "added to wishlist" });
+                    }
+                }
+            })
+      //  } else {
+            // res.redirect('/user/login')
+          //  res.json({ msg: "please Send correct token and courseid" });
+        //}
+    })
+router
+    .route('/wishlistremove-course')
+    .post((req, res) => {
+        let course_id = req.body.courseId;
+        let token = req.body.token
+
+        UserEnrolledCourses.findOneAndUpdate({ user_id: token }, { $pull: { wishlist: course_id } }, { new: true })
+            .then((customer) => {
+                res.json({ msg: "Course deleted from  wishlist" });
+            })
+    })
+router
+    .route('/trending-course')
+    .get((req, res) => {
+        
+        Course.find().sort({createdAt:-1}).find( function (err, foundItem) {
+            if (!err) {
+                if (foundItem) {
+                    res.json({ data: foundItem })
+                }
+            }
+        })
+    })
 router
     .route('/course')
     .get((req, res) => {
@@ -46,7 +198,7 @@ router
         Course.find({}, function (err, foundItem) {
             if (!err) {
                 if (foundItem) {
-                    res.json(foundItem)
+                    res.json({data:foundItem})
                 }
             }
         })
@@ -141,38 +293,34 @@ router
             res.json({ err: 'Error occured' })
         }
     });
+
+    router
+    .route('/profiledetail')
+    .post((req, res) => {
+        // console.log(req.body.id);
+        // if (!req.isAuthenticated()) {
+        //     User.findById({ _id: req.body.id }, (err, foundItems) => {
+        //         if (!err) {
+
+        //             res.json(foundItems);
+        //         }
+        //     })
+        // } else {
+        //     res.json({ msg: 'Please Login' })
+        // }
+        User.findById({ _id: req.body.id })
+        .then(data=>{
+            res.json(data);
+        })
+    })
     router
     .route('/profile')
-    .get((req, res) => {
-        if (req.isAuthenticated()) {
-            User.findById(req.user , (err, foundItems) => {
-                if (!err) {                    
-                        // res.render('user2/userProfile', {  
-                        //     fullName: foundItems.fullName,
-                        //     cllg: foundItems.college,
-                        //     phone: foundItems.phone,
-                        //     address: foundItems.address,
-                        //     postcode: foundItems.postcode,
-                        //     linkedin: foundItems.linkedin,
-                        //     facebook: foundItems.facebook,
-                        //     twitter: foundItems.twitter,
-                        //     instagram: foundItems.instagram,
-                        //     layout: 'user'
-                        // }); 
-                        res.json(foundItems);                   
-                }
-            })
-        } else {
-            // res.redirect('/user/login');
-            res.json({msg:'Please Login'})
-        }
-    })
-    .post(upload.single('image'),(req, res) => {
-        User.findByIdAndUpdate(req.user,
+    .post((req, res) => {
+        User.findByIdAndUpdate(req.body.id,
             
-                {   image:req.file.filename,
+                {  
                     fullName: req.body.fullName,
-                    college: req.body.cllg,
+                    college: req.body.college,
                     phone: req.body.phone,
                     address: req.body.address,
                     postcode: req.body.postcode,

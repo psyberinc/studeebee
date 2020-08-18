@@ -40,7 +40,7 @@
                                                             <%=Math.floor(course.price - (course.discount / 100) * course.price)%>
                                                         </h4>
                                             </div>
-                                            <div class="course-buy-now text-center" style=>
+                                            <div class="course-buy-now text-center" >
                                                 <form action="/user/enrolled/?id=<%=course._id%>&name=<%=((course.title).trim().toLowerCase()).replace(/ /g,'-')%>" method="post">
                                                     <a href="/courses/paytm?price=<%=Math.floor(course.price - (course.discount / 100) * course.price)%>" type="button" class="btn radius-xl text-uppercase" style="margin-bottom: 20px;" value="Buy This
 											Course Now">Buy This Course Now</a>

@@ -88,6 +88,7 @@ router
 router
     .route('/')
     .get((req, res) => {
+        // console.log("query",req.query.filter);
         let filter = req.query.filter;
         Course.find({}, function (err, foundItem) {
             if (!err) {
