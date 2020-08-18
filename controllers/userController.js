@@ -258,6 +258,23 @@ router
                 };
             });
     })
+router
+    .route('/image-profile')
+    .post(upload.single('image'),(req, res) => {
+        User.findByIdAndUpdate(req.user[0].id,
+            
+                {  
+                     image:req.file.filename,
+                }
+            
+            , (err, d) => {
+                if (err) console.log(err);
+                else {
+                    res.redirect('/user/profile');
+                };
+            });
+    })
+
 // Signin-Signout Routes
 router
     .route('/login')

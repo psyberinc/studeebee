@@ -136,8 +136,8 @@
                                             </div>
                                             
                                             <div class="row">
-                                                <button id="replaybtn<%= i %> " type="button" style="font-size: 12px;padding: 7px;" class="btn btn-secondary m-2 replaybtn" onclick="check()">View replay</button>
-                                                <button id="questionbtn<%= i %> " type="button" style="font-size: 12px;padding: 7px;" class="btn btn-warning m-2 questionbtn" onclick="check1()">Back to Question</button>
+                                                <button id="replaybtn<%= i %> " type="button" style="font-size: 12px;padding: 7px;" class="btn btn-secondary m-2 replaybtn" onclick="check(this)">View replay</button>
+                                                <button id="questionbtn<%= i %> " type="button" style="font-size: 12px;padding: 7px;" class="btn btn-warning m-2 questionbtn" onclick="check1(this)">Back to Question</button>
                                             </div>
                                             
                                             <div id="showallreplay<%= i %>" class="showallreplay" style="display: none;">
@@ -405,10 +405,10 @@
                     })
                     
                     
-                    $('.questionbtn').click(function(e) {
-                        // $(e.target).hasClass('showallreplay').hide();
-                        $('.showallreplay').hide();
-                    })
+                    // $('.questionbtn').click(function(e) {
+                    //     // $(e.target).hasClass('showallreplay').hide();
+                    //     $('.showallreplay').hide();
+                    // })
                     
                     function chnageToSourceTwo() {
                         document.getElementById('source_video').src = 'public/assets/video/v2.mp4';
@@ -420,33 +420,17 @@
             <script>
                 function check(e){
                         let arr = [...document.all] //for full webpage
-                        document.addEventListener('click',(e)=>{
-                            // console.log("hello",arr.indexOf(e.target))
-                            let index = arr.indexOf(e.target);
-                            arr[index].addEventListener('click',()=>{
-                                let test = arr[index+2];
-                                test.style.display="block"
-                            })
-                        });
+                        let index = arr.indexOf(e);
+                        arr[index+2].style.display = "block";
+                       
                     }
-                    // function check1(e){
-                    //     // e.target.$('.showallreplay').hide();
-                    //     let arr = [...document.all] //for full webpage
-                    //     document.addEventListener('click',(e)=>{
-                            
-                    //         // console.log("hello",arr.indexOf(document.querySelector(".showallreplay")));
-                    //         console.log("hii",document.querySelector(".showallreplay"));
-                    //         let index = arr.indexOf(e.target);
-                    //         // console.log("hi",arr.indexOf(document.querySelector(".showallreplay")[index]));
-                    //         arr[index].addEventListener('click',()=>{
-                    //             // console.log(arr[index]);
-                    //             // let test = arr[index+2];
-                    //             // test.style.display="block"
-                    //             // console.log(test);
-                    //             // test.hide();
-                    //         })
-                    //     });
-                    // }
+                    function check1(e){
+                        let arr = [...document.all];
+                        let index = arr.indexOf(e);
+                        // console.log(index);
+                        // console.log(arr[index+1]);
+                        arr[index+1].style.display="none";
+                    }
             </script>
 </body>
 
