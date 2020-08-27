@@ -1,10 +1,7 @@
 // Dependencies
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
-const session = require('express-session');
 const passport = require('passport');
-const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 var router = express.Router();
@@ -20,11 +17,10 @@ const Add_quiz = require('../models/Add_quiz');
 const ans = require('../models/q&a')
 const Instructor = require('../models/instructor');
 
+
 // Modules
 let today = require('../modules/dateModule');
-
 var settings = require('../models/settings')
-let createContent = require('../modules/createContent');
 const auth = require('../modules/isverified');
 const uploads3 = require('../modules/awsupload');
 const { words, trim } = require('lodash');
@@ -48,6 +44,25 @@ const storage = multer.diskStorage({
     }
 });
 
+function convert_vimeo(input) {
+    var pattern = /(?:http?s?:\/\/)?(?:www\.)?(?:vimeo\.com)\/?(\S+)/g
+    if (pattern.test(input)) {
+     var replacement = 'https://player.vimeo.com/video/$1'
+     var input = input.replace(pattern, replacement);
+    }
+    return input;
+  }
+  
+  function convert_youtube(input) {
+      var pattern = /(?:http?s?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(\S+)/g;
+      if (pattern.test(input)) {
+        var replacement = "http://www.youtube.com/embed/$1"
+        var input = input.replace(pattern, replacement);
+        // For start time, turn get param & into ?
+        var input = input.replace('&amp;t=', '?t=');
+      }
+      return input;
+    }
 // Init Upload Local 
 const Upload = multer({
     storage: storage,
@@ -101,6 +116,67 @@ router
             res.redirect('/admin/login');
         }
     })
+    router
+    .route('/display_users')
+    .get((req, res) => {
+        // console.log("dashboard " + req.user[0].username);
+        if (req.isAuthenticated()) {
+            user.find({})
+                .then((student) => {
+                  
+                    // console.log(course);
+
+                    res.render("admin/users", { student: student, layout: 'backend' });
+                    
+
+                })
+            // console.log(req.user);
+        } else {
+            res.redirect('/admin/login');
+        }
+    })
+    router
+    .route('/display_instructors')
+    .get((req, res) => {
+        // console.log("dashboard " + req.user[0].username);
+        if (req.isAuthenticated()) {
+            Instructor.find()
+                .then((student) => {
+                    res.render("admin/users", { student: student, layout: 'backend' });
+                })
+            // console.log(req.user);
+        } else {
+            res.redirect('/admin/login');
+        }
+    })
+    router
+    .route('/delete_user/:id')
+    .get((req, res) => {
+        // console.log("dashboard " + req.user[0].username);
+        if (req.isAuthenticated()) {
+            Instructor.findByIdAndRemove(req.params.id)
+                .then((student) => {
+                    res.redirect('/admin/display_users')
+                })
+            // console.log(req.user);
+        } else {
+            res.redirect('/admin/login');
+        }
+    })
+    router
+    .route('/delete_instructors/:id')
+    .get((req, res) => {
+        // console.log("dashboard " + req.user[0].username);
+        if (req.isAuthenticated()) {
+            Instructor.findByIdAndRemove(req.params.id)
+                .then((student) => {
+                    res.redirect('/admin/display_instructors')
+                })
+            // console.log(req.user);
+        } else {
+            res.redirect('/admin/login');
+        }
+    })
 router
     .route('/add-quiz')
     .get((req, res) => {
@@ -116,7 +192,7 @@ router
         }
     })
     .post((req, res, next) => {
-        console.log("hi");
+        // console.log("hi");
         // console.log("course id "+ req.body.courseid );
         // Add_quiz It is a database model which is use to store question details 
         Add_quiz.create({
@@ -154,7 +230,7 @@ router
     .route('/add-blog')
     .get((req, res) => {
         if (req.isAuthenticated()) {
-            console.log(req.admin);
+            
             res.render('admin/add_blog', { layout: 'backend' });
         } else {
             res.redirect('/admin/login');
@@ -176,7 +252,7 @@ router
                     blogTags: tagStrings
                 });
                 newblog.save();
-                console.log(newblog);
+                // console.log(newblog);
                 res.redirect('/admin/dashboard');
             }
         })
@@ -184,25 +260,273 @@ router
 
 //Add Courses
 router
-    .route('/add-course')
+    .route('/course')
     .get((req, res) => {
         if (req.isAuthenticated()) {
-            console.log(req.admin)
-            res.render('admin/add_course', { layout: 'backend' })
+            Course.find()
+            .then(result=>{
+                
+                res.render('admin/course/course', { layout: 'backend',course:result })
+            })
+           
         } else {
             res.redirect('/admin/login')
         }
     })
-    .post(videoContentUpload, (req, res) => {
+router
+    .route('/course-module/:id')
+    .get((req, res) => {
+        if (req.isAuthenticated()) {
+            Course.findOne({_id:req.params.id})
+            .then(result=>{
+                // console.log('id',  result.content[0].id);
+                if(result.content.length === 0){
+                    req.flash('error_msg','No Module Found');
+                   res.redirect('/admin/course');
+                }
+                else{
+                    res.render('admin/course/course-module', { layout: 'backend',course:result.content,courseid:result.id })
+                }
+                
+            })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    router
+    .route('/add-course-module/:id')
+    .get((req, res) => {
+        if (req.isAuthenticated()) {
+            // Course.find()
+            // .then(result=>{
+                
+                res.render('admin/course/add-course-module', { layout: 'backend',courseid:req.params.id})
+            // })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    .post((req, res) => {
+        Course.findByIdAndUpdate(req.params.id,
+            {$push:{content:{
+                created_At:Date.now(),
+                module_description:req.body.description,
+                additional_link:req.body.additional_link,
+                sectionTitle:req.body.title,
+            }}}
+            , (err, foundItems) => {
+        //     if (!err) {
+             if (foundItems) {
+        //            console.log(content1)
+        //                 foundItems.content.push(content1)
+        //                 foundItems.save();
+                    
+                    res.redirect(`/admin/course-module/${req.params.id}`);
+        //         }
+            }
+        })
+    })
+router
+    .route('/edit-course-module/:id/:index')
+    .get((req, res) => {
+        
+        if (req.isAuthenticated()) {
+            // console.log("haa ",req.params.id,req.params.name)
+            Course.findById(req.params.id)
+            .then(result=>{
+                    res.render('admin/course/edit-course-module', { layout: 'backend',courseid:req.params.id,content:result.content[req.params.index],index:req.params.index})
+            })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    .post((req,res)=>{
+        Course.findByIdAndUpdate({_id:req.params.id})
+        .then(result=>{
+            result.content[req.params.index].$set({
+                module_description:req.body.description,
+                additional_link:req.body.additional_link,
+                sectionTitle:req.body.title,
+                
+            })
+            result.save();
+            res.redirect('/admin/course/')
+        })
+        
+    })
+    router
+    .route('/delete-course-module/:id/:index')
+    .get((req, res) => {
+        
+        if (req.isAuthenticated()) {
+            // console.log("haa ",req.params.id,req.params.name)
+            Course.findById(req.params.id)
+            .then(result=>{
+                // console.log(result.content[req.params.index]);
+                result.content[req.params.index].remove();
+                result.save()
+                    res.redirect(`/admin/course-module/${req.params.id}`);  
+                    // result.content[req.params.index].
+                    // res.render('admin/course/edit-course-module', { layout: 'backend',courseid:req.params.id,content:result.content[req.params.index],index:req.params.index})
+            })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    router
+    .route('/view-module-videos/:id/:index')
+    .get((req, res) => {
+        if (req.isAuthenticated()) {
+            Course.findById(req.params.id)
+            .then(result=>{
+                res.render('admin/course/view-module-videos', { layout: 'backend',courseid:req.params.id,course:result.content[req.params.index],index:req.params.index})
+            })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    router
+    .route('/add-course-video/:id/:index')
+    .get((req, res) => {
+        if (req.isAuthenticated()) {
+            Course.findById(req.params.id)
+            .then(result=>{               
+                // console.log(result.content)
+                res.render('admin/course/add-course-video', { layout: 'backend',course:result.content,courseid:req.params.id,index:req.params.index})
+            })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    .post((req,res)=>{
+        if (req.isAuthenticated()) {
+            var videolink
+            Course.findById(req.params.id)
+            .then(result=>{
+                if(req.body.category==='Vimeo'){
+                    videolink=convert_vimeo(req.body.video_link)
+                }
+                else if(req.body.category==='Youtube'){
+                    videolink=convert_youtube(req.body.video_link)
+                }
+                else{
+                    videolink=req.body.video_link
+                }
+                result.content[req.params.index].sectionVideoTitle.push(req.body.title)
+                result.content[req.params.index].sectionVideoUrl.push(videolink)
+                result.content[req.params.index].videoDuration.push(req.body.duration)
+                result.save()
+                res.redirect(`/admin/course-module/${req.params.id}`);
+            })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    
+    })
+    router
+    .route('/edit-module-video/:id/:moduleindex/:videoindex')
+    .get((req, res) => {
+        var moduleindex=req.params.moduleindex
+        var videoindex=req.params.videoindex
+        if (req.isAuthenticated()) {
+            Course.findById(req.params.id)
+            .then(result=>{
+                // var videotitle=result.content[moduleindex].sectionVideoTitle[videoindex]
+                // var videourl=result.content[moduleindex].sectionVideoUrl[videoindex]
+                // var videodurn=result.content[moduleindex].videoDuration[videoindex]
+                // console.log("moduleindex",moduleindex,"videoindex=",videoindex)
+                // console.log(result.content[moduleindex].sectionVideoTitle[videoindex])
+                res.render('admin/course/edit-module-video',
+                { layout:'backend',course:result.content,courseid:req.params.id,moduleindex:moduleindex,videoindex:videoindex})
+            })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    .post((req,res)=>{
+        var moduleindex=req.params.moduleindex
+        var videoindex=req.params.videoindex
+        if (req.isAuthenticated()) {
+            Course.findByIdAndUpdate(req.params.id,{content:[req.params.moduleindex].sectionVideoTitle.$set({sectionVideoTitle:req.body.title})})
+            .then(result=>{
+                // result.content[req.params.index].$set({
+                //     module_description:req.body.description,
+                //     additional_link:req.body.additional_link,
+                //     sectionTitle:req.body.title,
+                    
+                // })
+                // Course.findByIdAndUpdate(req.params.id,)
 
-        // Get Only SectionFile Array
-        let sectionFilesVideos = req.files.sectionFile;
-        let videoLocationArr = [];
-        // Get the URL of Video
-        sectionFilesVideos.forEach((item) => {
-            videoLocationArr.push(item.location);
-        });
+                // console.log(typeof result.content[moduleindex].sectionVideoTitle);
 
+                // var videotitle =result.content[moduleindex].sectionVideoTitle[videoindex]
+                // console.log(typeof videotitle);
+                // console.log("videotitle",videotitle)
+                // result.content[moduleindex].sectionVideoTitle[videoindex].replace('videotitle',`${req.body.title}` );
+                 
+                //  result.content[moduleindex].sectionVideoTitle[videoindex]=req.body.title
+                //  result.content[moduleindex].sectionVideoUrl[videoindex].push(req.body.video_link)
+                //  result.content[moduleindex].videoDuration[videoindex].push(req.body.duration)
+
+                // result.content[req.params.index].sectionVideoTitle.push(req.body.title)
+                // result.content[req.params.index].sectionVideoUrl.push(req.body.video_link)
+                // result.content[req.params.index].videoDuration.push(req.body.duration)
+                // result.save()
+                res.redirect(`/admin/course-module/${req.params.id}`);
+            })
+           
+        } else {
+            res.redirect('/admin/login')
+        }
+    
+    })
+    // router
+    // .route('/delete-module-video/:id/:moduleindex/:videoindex')
+    // .get((req, res) => {
+    //     var moduleindex=req.params.moduleindex
+    //     var videoindex=req.params.videoindex
+    //     if (req.isAuthenticated()) {
+    //         Course.findById(req.params.id)
+    //         .then(result=>{
+    //             // var videotitle=result.content[moduleindex].sectionVideoTitle[videoindex]
+    //             // var videourl=result.content[moduleindex].sectionVideoUrl[videoindex]
+    //             // var videodurl=result.content[moduleindex].videoDuration[videoindex]
+    //             // console.log("moduleindex",moduleindex,"videoindex=",videoindex)
+    //             // console.log(result.content[moduleindex].sectionVideoTitle[videoindex])
+    //             result.content[moduleindex].sectionVideoTitle[videoindex].pull()
+    //             result.content[moduleindex].sectionVideoUrl[videoindex].remove()
+    //             result.content[moduleindex].videoDuration[videoindex].remove()
+    //             result.save()
+    //             res.render('admin/course/edit-module-video',
+    //             { layout:'backend',course:result.content,courseid:req.params.id,moduleindex:moduleindex,videoindex:videoindex})
+    //         })
+           
+    //     } else {
+    //         res.redirect('/admin/login')
+    //     }
+    // })
+
+router
+    .route('/add-course')
+    .get((req, res) => {
+        
+        if (req.isAuthenticated()) {
+            
+            res.render('admin/course/add_course', { layout: 'backend' })
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    .post(upload.single('thumbnail'), (req, res) => {
+        
         // Sperate Each Lines from Preq and Outcome
         let splitline = (l) => {
             l = l.split(/1.|2.|3.|4.|5.|6.|7.|8.|9.|10|11.|12.|13.|14.|15.|16.|17.|18.|19.|20./);
@@ -214,12 +538,9 @@ router
             l = l.filter((word) => word.length > 1);
             return l
         }
-        let outcome = splitline(req.body.outcome);
-        let prereq = splitline(req.body.prereq);
-
-        // Sort content in the form of objects     
-        let content = createContent.contentSet(req.body.sectionName, req.body.sectionVideoText, videoLocationArr);
-
+        var outcome = splitline(req.body.outcome);
+        var prereq = splitline(req.body.prereq);
+        
         const newCourse = new Course({
             creator_id: req.admin,
             title: req.body.title.trim(),
@@ -232,12 +553,12 @@ router
             prereq: prereq,
             outcome: outcome,
             description: req.body.description,
-            thumbnail: req.files.thumbnail[0].location,
+            thumbnail: req.file.filename,
             createdAt: Date.now(),
             lastUpdatedAt: Date.now(),
-            content: content
+            
         })
-        console.log(newCourse);
+        // console.log(newCourse);
         newCourse.save();
         ans.create({
             courseId: newCourse.id
@@ -246,8 +567,60 @@ router
                 res.redirect('/admin/add-course')
             })
     })
+    router
+    .route('/edit-course/:id')
+    .get((req, res) => {
+        
+        if (req.isAuthenticated()) {
+            Course.findById(req.params.id)
+            .then(result=>{
+                console.log(result)
+                res.render('admin/course/edit_course', { layout: 'backend',course:result })
+            })
+            
+        } else {
+            res.redirect('/admin/login')
+        }
+    })
+    .post(upload.single('thumbnail'),(req,res)=>{
+        let splitline = (l) => {
+            l = l.split(/1.|2.|3.|4.|5.|6.|7.|8.|9.|10|11.|12.|13.|14.|15.|16.|17.|18.|19.|20./);
+            for (let i = 1; i <= l.length; i++) {
+                if (l[i] != undefined) {
+                    l[i] = l[i].trim()
+                }
+            }
+            l = l.filter((word) => word.length > 1);
+            return l
+        }
+        var outcome = splitline(req.body.outcome);
+        var prereq = splitline(req.body.prereq);
+        Course.findByIdAndUpdate(req.params.id,{
 
-
+            title: req.body.title.trim(),
+            instructor: req.body.instructor / trim(),
+            price: req.body.price.trim(),
+            discount: req.body.discount.trim(),
+            category: req.body.category,
+            level: req.body.level,
+            language: req.body.language,
+            prereq: prereq,
+            outcome: outcome,
+            description: req.body.description,
+            thumbnail: req.file.filename,
+            lastUpdatedAt: Date.now(),
+        })
+        res.redirect('/admin/course')
+    })
+    router
+    .route('/delete-course/:id')
+    .get((req, res) => {
+        if (req.isAuthenticated()) {
+            Course.findByIdAndRemove(req.params.id).then(()=>{res.redirect("/admin/course")})
+        } else {
+            res.redirect('/admin/login');
+        }
+    })
 // Approve Courses
 router
     .route('/approve-course')
@@ -312,13 +685,26 @@ router
     .post((req, res) => {
         try {
             if (req.body.admin_code === process.env.ADMIN_CODE) {
-                Admin.register({ username: req.body.username, email: req.body.email }, req.body.password, function (err, user) {
+                Admin.register({
+                        username: req.body.username,
+                        email: req.body.email,
+                        fullname: " ",
+                        state: " ",
+                        phone: " ",
+                        address: " ",
+                        postcode: " ",
+                        city: " ",
+                        companyname: " ",
+                        cto: " ",
+                        image:"favicon.png"
+                     
+                    }, req.body.password, function (err, user) {
                     if (err) {
-                        console.log(err);
-                        res.redirect('/register');
+                        // console.log(err);
+                        res.redirect('/admin/register');
                     } else {
                         passport.authenticate('local.admin')(req, res, function () {
-                            console.log(req.admin);
+                            // console.log(req.admin);
                             res.redirect('/admin/dashboard');
                         });
                     }
@@ -355,8 +741,6 @@ router
     .post(upload.single('thumbnail'), (req, res) => {
         var filepath=path.join('/uploads')+'/'+req.file.filename;
         if (req.isAuthenticated()) {
-
-
             liveclass.create({
                 title: req.body.title,
                 category: req.body.category,
@@ -382,11 +766,9 @@ router
     .get((req, res) => {
         liveclass.find({})
             .then((data) => {
-                // console.log("data=",data);
                 res.render('admin/Liveclasses', { layout: 'backend', liveclass: data });
 
             })
-        // res.render('admin/Liveclasses',{layout:'backend'})
     })
 router
     .route('/live-class-delete/:id')
@@ -400,23 +782,8 @@ router
     .route('/user-profile')
     .get((req, res) => {
         if (req.isAuthenticated()) {
-            Admin.findOne(req.user.id, (err, foundItems) => {
-                if (!err) {
-                    if (!foundItems) {
-                        const newadminProfile = new Admin({
-
-                            fullname: ' ',
-                            state: ' ',
-                            city: ' ',
-                            postcode: ' ',
-                            address: ' ',
-                            phone: ' ',
-                            companyname: ' ',
-                            cto: ' ',
-                        });
-                        newadminProfile.save();
-                        res.redirect('/admin/user-profile');
-                    } else {
+            Admin.findById(req.user[0].id, (err, foundItems) => {
+                if (!err) {                   
                         res.render('admin/admin_profile', {
 
                             fullname: foundItems.fullname,
@@ -428,40 +795,48 @@ router
                             companyname: foundItems.companyname,
                             cto: foundItems.cto,
                             layout: 'backend'
-                        });
+                        })
                     }
-                }
-            })
-            // console.log(req.admin);
-
+                })
         } else {
             res.redirect('/admin/login');
         }
     })
     .post((req, res) => {
-        Admin.findOneAndUpdate(req.user.id,
-            {
-                $set:
+        Admin.findByIdAndUpdate(req.user[0].id,
                 {
-                    // image: req.file.filename,
                     fullname: req.body.fullname,
-                    state: req.body.cllg,
+                    state: req.body.state,
                     phone: req.body.phone,
                     address: req.body.address,
                     postcode: req.body.postcode,
                     companyname: req.body.companyname,
                     cto: req.body.cto,
                     city: req.body.city,
-                    // instagram: req.body.instagram
-                }
-            }, { new: true, useFindAndModify: false }, (err, d) => {
+                },{ new: true, useFindAndModify: false },
+                (err, d) => {
                 if (err) console.log(err);
                 else {
                     res.redirect('/admin/user-profile');
                 };
             });
     })
-
+router
+    .route('/image-user-profile')
+    .post(upload.single('image'),(req, res) => {
+        Admin.findByIdAndUpdate(req.user[0].id,
+            
+                {  
+                     image:req.file.filename,
+                }
+            
+            ,{ new: true, useFindAndModify: false }, (err, d) => {
+                if (err) console.log(err);
+                else {
+                    res.redirect('/admin/user-profile');
+                };
+            });
+    })
 router.post('/adminpassword', (req, res, next) => {
     Admin.findById(req.user[0].id)
         .then((user) => {

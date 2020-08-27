@@ -17,6 +17,25 @@
 							<h4>User Profile</h4>
 						</div>
 						<div class="widget-inner">
+							<form action="/admin/image-user-profile" method="POST" enctype="multipart/form-data">
+                           
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label">Profile image</label>
+									<div class="col-sm-7">
+										<input class="form-control" name="image" type="file" required>
+									</div>
+									
+								</div>
+								<div class="">
+									<div class="row">
+										<div class="col-sm-2">
+										</div>
+										<div class="col-sm-7">
+											<button type="submit" class="btn">Upload image</button>
+										</div>
+									</div>
+								</div>
+							</form>
 							<form class="edit-profile m-b30" action="/admin/user-profile" method="POST">
 								<div class="">
 									<div class="form-group row">

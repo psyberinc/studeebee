@@ -10,7 +10,7 @@ passport.serializeUser(function (user, done) {
 });
 passport.deserializeUser((id,done)=>{
     User.find({_id:id},(err,user)=>{
-        console.log(user.length)
+        
         if(user.length == 0){
             Admin.find({_id:id},(err,user1)=>{                
                 if(user1.length ===0 ){

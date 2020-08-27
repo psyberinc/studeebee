@@ -236,10 +236,10 @@ router
             res.redirect('/user/login');
         }
     })
-    .post(upload.single('image'),(req, res) => {
+    .post((req, res) => {
         User.findByIdAndUpdate(req.user[0].id,
             
-                {   image:req.file.filename,
+                {   
                     fullName: req.body.fullName,
                     college: req.body.cllg,
                     phone: req.body.phone,
@@ -249,9 +249,8 @@ router
                     facebook: req.body.facebook,
                     twitter: req.body.twitter,
                     instagram: req.body.instagram
-                }
-            
-            , (err, d) => {
+                },{ new: true, useFindAndModify: false },
+                 (err, d) => {
                 if (err) console.log(err);
                 else {
                     res.redirect('/user/profile');
@@ -303,7 +302,7 @@ router
     })
     .post((req, res) => {
         [rand, status] = smtpEmail.verifyEmail(req.get('host'), req.body.email);
-        console.log(rand, status);
+        // console.log(rand, status);
         User.register(
             { username: req.body.username,
                  email: req.body.email,
@@ -320,7 +319,7 @@ router
                   registerToken: rand  },
                  req.body.password, function (err, user) {
             if (err) {
-                console.log(err);
+                // console.log(err);
                 res.redirect('/user/register');
             }
             else {

@@ -42,6 +42,7 @@ const adminSchema = new Schema({
   phone:{type:String},
   companyname:{type:String},
   cto:{type:String},
+  image:{type:String}
 });
 
 

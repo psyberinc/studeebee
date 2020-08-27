@@ -20,7 +20,18 @@ courseSchema = new Schema({
     thumbnail: String,
     createdAt:Date,
     LastUpdatedAt:Date,
-    content: Array,
+    // Module:Array,
+    content: [{
+        created_At:Date,
+        module_description:String,
+        additional_link:String,
+        sectionTitle:String,
+        sectionVideoTitle:Array,
+        sectionVideoUrl:Array,
+        videoDuration:Array
+    }
+
+    ],
    
     approved:{type:Boolean, default:false, enum:[true,false]}
 },{strict : false});

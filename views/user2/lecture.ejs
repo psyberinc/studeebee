@@ -79,9 +79,15 @@
                         <%=course.title%>
                     </h4>
                     <!-- <h1>Header Portion --Replace Here --</h1> -->
-                    <video class="tab" id="video" controls>Your browser does not support the &lt;video&gt; tag.
-                        <source id="source_video" src="<%= videoUrl %>" type='video/mp4' />
-                   </video>
+                    <!-- <video class="tab" id="video" controls>Your browser does not support the &lt;video&gt; tag.
+                        <source id="source_video" src="" type='video/mp4' />
+                   </video> -->
+                   
+                   <iframe style="background-color: black;"  src="<%= videoUrl %>?autoplay=1" width="1245" height="622.5"
+                    frameborder="0" allow="autoplay; fullscreen" allowfullscreen >
+                    </iframe>
+                    
+                    
 
                     <div style="margin: 2rem 0 0 0">
                         <ul class="nav nav-tabs m-4" id="myTab" role="tablist">
@@ -403,13 +409,7 @@
                         $('#note_div').show();
                         $('.form_note').hide();
                     })
-                    
-                    
-                    // $('.questionbtn').click(function(e) {
-                    //     // $(e.target).hasClass('showallreplay').hide();
-                    //     $('.showallreplay').hide();
-                    // })
-                    
+                
                     function chnageToSourceTwo() {
                         document.getElementById('source_video').src = 'public/assets/video/v2.mp4';
                         video.load();
@@ -421,14 +421,11 @@
                 function check(e){
                         let arr = [...document.all] //for full webpage
                         let index = arr.indexOf(e);
-                        arr[index+2].style.display = "block";
-                       
+                        arr[index+2].style.display = "block";  
                     }
                     function check1(e){
                         let arr = [...document.all];
                         let index = arr.indexOf(e);
-                        // console.log(index);
-                        // console.log(arr[index+1]);
                         arr[index+1].style.display="none";
                     }
             </script>

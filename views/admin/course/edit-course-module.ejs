@@ -1,0 +1,90 @@
+
+	<!--Main container start -->
+	<main class="ttr-wrapper">
+		<div class="container-fluid">
+			<div class="db-breadcrumb">
+				<h4 class="breadcrumb-title">Edit-Course-Module</h4>
+				<ul class="db-breadcrumb-list">
+					<li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+					<li>Edit-Course-Module</li>
+				</ul>
+			</div>
+			<div class="row">
+				<!-- Your Profile Views Chart -->
+				<div class="col-lg-12 m-b30">
+					<div class="widget-box">
+						<div class="widget-inner">
+							<form class="edit-profile m-b30" method="POST" action="/admin/edit-course-module/<%= courseid %>/<%=index%> ">
+								<div class="row">
+									<!-- Level 1: Basic Info -->
+									<div class="col-12">
+										<div class="ml-auto">
+											<h3> Basic info</h3>
+										</div>
+									</div>
+									<div class="form-group col-6">
+										<label class="col-form-label">Module Title</label>
+										<div>
+											<input class="form-control" type="text" value="<%=content.sectionTitle  %> " name="title">
+										</div>
+									</div>
+									<div class="seperator"></div>
+
+									<!-- Detailed Description -->
+									<div class="col-12 m-t20">
+										<div class="ml-auto m-b5">
+											<h3> Description of the Moudle</h3>
+										</div>
+									</div>
+									<div class="form-group col-12">
+										<label class="col-form-label">Module description</label>
+										<div>
+											<textarea class="form-control" name="description" ><%= content.module_description%> </textarea>
+										</div>
+									</div>
+									<div class="col-12">
+										<div class="ml-auto">
+											<h3> Additional Link</h3>
+										</div>
+									</div>
+									<div class="form-group col-6">
+										<label class="col-form-label">Link</label>
+										<div>
+											<input class="form-control" type="text" value="<%= content.additional_link %> " name="additional_link">
+										</div>
+									</div>	
+															
+									<div class="col-12">
+										
+										<button type="submit" style="padding-top:10px" class="btn btn-block">Update Module</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- Your Profile Views Chart END-->
+			</div>
+		</div>
+		<script src="/admin/assets/js/jquery.min.js"></script>
+
+		<script>
+			// Pricing add
+			function newMenuItem() {
+				var newElem = $('tr.list-item').first().clone();
+				newElem.find('input').val('');
+				newElem.appendTo('table#item-add');
+			}
+			if ($("table#item-add").is('*')) {
+				$('.add-item').on('click', function (e) {
+					e.preventDefault();
+					newMenuItem();
+				});
+				$(document).on("click", "#item-add .delete", function (e) {
+					e.preventDefault();
+					$(this).parent().parent().parent().parent().remove();
+				});
+			}
+		</script>
+	</main>
+	<div class="ttr-overlay"></div>

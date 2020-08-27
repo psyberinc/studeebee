@@ -45,6 +45,16 @@ router
     .get((req, res) => {
         res.render('studeebee/about',{layout:'main'})
     })
+    router
+    .route('/teacher')
+    .get((req, res) => {
+        res.render('studeebee/teacher',{layout:'main'})
+    })
+    router
+    .route('/about-us-more')
+    .get((req, res) => {
+        res.render('studeebee/about2',{layout:'main'})
+    })
 
 router
     .route('/faq')
