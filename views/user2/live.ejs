@@ -1,0 +1,215 @@
+<main class="ttr-wrapper" style="padding-top: 20px;">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <h4 class="breadcrumb-title">Live</h4>
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li>Live Class</li>
+            </ul>
+        </div>
+        <div class="row">
+            <!-- Your Profile Views Chart-->
+            <div class="col-lg-12 m-b30">
+                <div class="page-content bg-white">
+                    <div class="content-block">
+
+                        <!-- Portfolio  -->
+                        <div class="section-area section-sp1 gallery-bx">
+
+                            <div class="container">
+                                <div class="wc-title">
+                                    <h4>Live Courses</h4>
+                                </div>
+                                <div class="clearfix">
+                                    <ul id="masonry" class="ttr-gallery-listing magnific-image row">
+                                         <!-- Dynamic live class start -->
+                                        
+                                         
+                                         <% for( let i = 0; i < liveclass.length; i++ ) { %>                        
+                                        <li class="action-card col-lg-6 col-md-6 col-sm-12 upcoming">
+                                            <div class="event-bx m-b30">
+                                                <div class="action-box">
+                                                    <img src="<%= liveclass[i].thumbnail %> " style="width: 540px;height: 324px;"  alt="">
+                                                </div>
+                                                <div class="info-bx d-flex">
+                                                    <div>
+                                                        <div class="event-time">
+                                                            <div class="event-date"><%= liveclass[i].day %></div>
+                                                            <div class="event-month"><%= liveclass[i].month %></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="event-info">
+                                                        <h4 class="event-title"><a href="/live-classes/class-intro/<%= liveclass[i].id %>"><%= liveclass[i].title %> </a></h4>
+                                                        <ul class="media-post">
+                                                            <li><a href="#"><i class="fa fa-clock-o"></i> <%= liveclass[i].time1 %> <%= liveclass[i].time2 %></a></li>
+                                                            <li><a href="#"><i class="fa fa-map-marker"></i> <%= liveclass[i].level %> </a>
+                                                            </li>
+                                                        </ul>
+                                                        <h5>Taken By</h5>
+                                                        <p><%= liveclass[i].instructor %></p>
+                                                        <% if (isAuth===true) { %>
+                                                         
+                                                        <%}else{%>
+                                                            <a href="" class="btn btn-block btn-rounded " style="margin:2em" data-toggle="modal" data-target="#modalRegisterForm">Enroll Now </a>
+                                                        <% } %> 
+                                                        
+                                                         <!--Pop up register model  -->
+                                                         <div class="modal fade bd-example-modal-lg"style="border-radius: 5em;" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg" role="document" style="border-radius: 5em;">
+                                                                <div class="modal-content" style="border-radius: 5em;">
+                                                                    <div class="modal-body mx-3">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        <div class="row p-b30">
+                                                                            <div class="col-5">
+                                                                                <h4 style="padding: 4em 5em 0em 0em;;color: #f7b205;">Learn Live Online From India's Best Teachers</h4>
+                                                                                <img src="admin/assets/images/illustration_svg.png" style="    width: 75%; padding-top: 9em;">
+                                                                            </div>
+                
+                                                                            <div class="col-7" style="text-align: center;">
+                                                                                <img src="assets/images/logo.png" width="50%" alt="company logo">
+                                                                                    <h4 class="p-5" style="font-size: 25px;">Register Now to attend the Free Live Master Classes !</h4>
+                                                                                    <form class="contact-bx" action="/user/loginlive" method="POST">
+                                                                                        <div class="row placeani">
+                                                                                            <div class="col-lg-12">
+                                                                                                <div class="form-group">
+                                                                                                    <div class="input-group">
+                                                                                                        <label>Enter your phone or Email</label>
+                                                                                                        <input name="email" type="email" required="" class="form-control" required>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-lg-12">
+                                                                                                <div class="form-group">
+                                                                                                    <div class="input-group">
+                                                                                                        <label>Your Password</label>
+                                                                                                        <input name="password" type="password" class="form-control" required>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <!-- <div class="col-lg-12">
+                                                                                                <div class="form-group form-forget">
+                                                                                                    <a href="forget-password.html" class="ml-auto">Forgot Password?</a>
+                                                                                                </div>
+                                                                                            </div> -->
+                                                                                            <div class="col-lg-12 m-b30">
+                                                                                                <!-- <input name="submit" type="submit" value="Login" class="btn btn-block" style="border-radius: 2em;"> -->
+                                                                                                <button type="submit" class="btn btn-block" style="border-radius: 2em;" > Login</button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-lg-12">
+                                                                                            <h6>OR</h6>
+                                                                                            
+                                                                                                <a class="btn button-success flex-fill m-r5 " href="#"> Register Here</a>
+                                                                                                <a class="btn  flex-fill m-l5 google-plus" href="/user/auth/google"><i class="fa fa-google-plus"></i> Continue With Google</a>
+                                                                                            
+                                                                                        </div>
+                                                                                    </form>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- <div class="md-form mb-5">
+                                                                            <i class="fa fa-user prefix grey-text"></i>
+                                                                            <label data-error="wrong" data-success="right" for="orangeForm-name">Your name</label>
+                                                                            <input type="text" id="orangeForm-name" class="form-control validate">
+                
+                                                                        </div>
+                                                                        <div class="md-form mb-5">
+                                                                            <i class="fa fa-envelope prefix grey-text"></i>
+                                                                            <label data-error="wrong" data-success="right" for="orangeForm-email">Your email</label>
+                                                                            <input type="email" id="orangeForm-email" class="form-control validate">
+                
+                                                                        </div>
+                
+                                                                        <div class="md-form mb-4">
+                                                                            <i class="fa fa-phone prefix grey-text"></i>
+                                                                            <label data-error="wrong" data-success="right" for="orangeForm-pass">Phone No</label>
+                                                                            <input type="password" id="orangeForm-pass" class="form-control validate">
+                
+                                                                        </div> -->
+                
+                                                                    </div>
+                                                                    <!-- <div class="modal-footer d-flex justify-content-center">
+                                                                        <button class="btn btn-deep-orange">Join Class</button>
+                                                                    </div> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <% } %>
+                                        <!-- Dynamic live class End -->
+                                    
+                
+                                    </ul>
+                                </div>
+                                <!-- <div class="clearfix">
+                                    <ul id="masonry" class="ttr-gallery-listing magnific-image row">
+                                       
+                                        <li class="action-card col-lg-6 col-md-6 col-sm-12 upcoming">
+                                            <div class="event-bx m-b30">
+                                                <div class="action-box">
+                                                    <img src="/assets/images/dash3.jpg" alt="">
+                                                </div>
+                                                <div class="info-bx d-flex">
+                                                    <div>
+                                                        <div class="event-time">
+                                                            <div class="event-date">29</div>
+                                                            <div class="event-month">October</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="event-info">
+                                                        <h4 class="event-title"><a href="/live-classes/class-intro">Education Autumn Tour 2019</a></h4>
+                                                        <ul class="media-post">
+                                                            <li><a href="#"><i class="fa fa-clock-o"></i> 7:00am 8:00am</a></li>
+                                                            <li><a href="#"><i class="fa fa-map-marker"></i> Berlin, Germany</a>
+                                                            </li>
+                                                        </ul>
+                                                        <h5>Taken By</h5>
+                                                        <p>DEEPIKSHA, Btech IIT Bhu</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="action-card col-lg-6 col-md-6 col-sm-12  expired">
+                                            <div class="event-bx m-b30">
+                                                <div class="action-box">
+                                                    <img src="/assets/images/dash2.jpg" alt="">
+                                                </div>
+                                                <div class="info-bx d-flex">
+                                                    <div>
+                                                        <div class="event-time">
+                                                            <div class="event-date">29</div>
+                                                            <div class="event-month">October</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="event-info">
+                                                        <h4 class="event-title"><a href="/user2/live">Education Autumn Tour 2019</a></h4>
+                                                        <ul class="media-post">
+                                                            <li><a href="#"><i class="fa fa-clock-o"></i> 7:00am 8:00am</a></li>
+                                                            <li><a href="#"><i class="fa fa-map-marker"></i> Berlin, Germany</a>
+                                                            </li>
+                                                        </ul>
+                                                        <h5>Taken By</h5>
+                                                        <p>DEEPIKSHA, Btech IIT Bhu</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                       
+                                        
+                                    </ul>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- contact area END -->
+                </div>
+              
+            </div>
+            <!-- Your Profile Views Chart END-->
+        </div>
+    </div>
+</main>

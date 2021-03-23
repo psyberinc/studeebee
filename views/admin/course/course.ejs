@@ -1,0 +1,58 @@
+
+	<!--Main container start -->
+	<main class="ttr-wrapper">
+		<div class="container-fluid">
+			<div class="db-breadcrumb">
+				<h4 class="breadcrumb-title">Courses</h4>
+				<ul class="db-breadcrumb-list">
+					<li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+					<li>Courses</li>
+				</ul>
+			</div>
+			<div class="row">
+				<!-- Your Profile Views Chart -->
+				<div class="col-lg-12 m-b30">
+					<div class="widget-box">
+            <%- include('../../partials/website_partials/message')%>
+						<div class="widget-inner">
+							<table class="table">
+                                <thead class="thead-dark">
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Course Name</th>
+                                    <th scope="col">Instructor</th>
+                                    <th scope="col">Add Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Module</th>
+                                    
+                                    
+                                    <th scope="col">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <% for( let i = 0; i < course.length; i++ ) { %>
+                                    
+                                    
+                                  <tr>
+                                    <th scope="row"><%= i+1 %> </th>
+                                    <td><%=course[i].title%></td>
+                                    <td><%=course[i].instructor%></td>
+                                    <td><%=course[i].createdAt.toString().substring(0,15)%></td>
+                                    <td>Active</td>
+                                    <td><a href="/admin/course-module/<%= course[i].id %> " class="btn">view Modules</a></td>
+                                    
+                                    
+                                    <td><a href="/admin/edit-course/<%= course[i].id %>"><span class="fa fa-pencil-square-o"></span></a><a href="/admin/delete-course/<%= course[i].id %> " style="padding-left: 5px;"><span class="fa fa-trash"></span></a></td>
+                                  </tr>
+                                 
+                                </tbody>
+                                <% } %>
+                              </table>
+						</div>
+					</div>
+				</div>
+				<!-- Your Profile Views Chart END-->
+			</div>
+		</div>
+	</main>
+	<div class="ttr-overlay"></div>

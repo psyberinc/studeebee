@@ -1,0 +1,78 @@
+
+	<!--Main container start -->
+	<main class="ttr-wrapper">
+		<div class="container-fluid">
+			<div class="db-breadcrumb">
+				<h4 class="breadcrumb-title">User View</h4>
+				<ul class="db-breadcrumb-list">
+					<li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+					<li>User View</li>
+				</ul>
+			</div>
+			<div class="row">
+				<!-- Your Profile Views Chart -->
+				<div class="col-lg-12 m-b30">
+					<div class="widget-box">
+						<div class="widget-inner">
+							<form class="edit-profile m-b30" action="/admin/view_user/<%=student.id %>" method="POST" type="file"
+								enctype="multipart/form-data">
+								<div class="row">
+									<div class="form-group col-6">
+										<label class="col-form-label">User Name</label>
+										<div>
+											<input class="form-control" type="text" value="<%=student.username %>" name="username" readonly>
+										</div>
+									</div>
+
+									<div class="form-group col-6">
+										<label class="col-form-label">Email</label>
+										<div>
+											<input class="form-control" type="email" value="<%=student.email %>" name="email" readonly>
+										</div>
+									</div>
+                                    
+                                    <div class="form-group col-6">
+										<label class="col-form-label">Fullname</label>
+										<div>
+											<input class="form-control" type="text" value="<%=student.fullName %>" name="fullname" readonly>
+										</div>
+                                    </div>
+                                    <div class="form-group col-6">
+										<label class="col-form-label">Phone no.</label>
+										<div>
+											<input class="form-control" type="text" value="<%=student.phone %>" name="phone" readonly>
+										</div>
+                                    </div>
+                                    <div class="form-group col-6">
+										<label class="col-form-label">Address</label>
+										<div>
+											<input class="form-control" type="text" value="<%=student.address %>" name="address" readonly>
+										</div>
+                                    </div>
+                                    <div class="form-group col-6">
+										<label class="col-form-label">College</label>
+										<div>
+											<input class="form-control" type="text" value="<%=student.college %>" name="college" readonly>
+										</div>
+                                    </div>
+                                    <div class="form-group col-6">
+										<label class="col-form-label">Postcode</label>
+										<div>
+											<input class="form-control" type="text" value="<%=student.postcode %>" name="college" readonly>
+										</div>
+                                    </div>
+                                    
+                                    
+        
+                                  
+									
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- Your Profile Views Chart END-->
+			</div>
+		</div>
+	</main>
+	<div class="ttr-overlay"></div>

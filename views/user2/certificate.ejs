@@ -1,0 +1,65 @@
+
+
+<div class="container p-5" style="border: solid 2px black; margin-top: 3em;    margin-bottom: 2em;">
+    <div id="certi" ></div>
+    <div class="row">
+        <button id="downloadPDF" type="text" class="btn btn-success">Download Certificate</button>
+    </div>
+</div>
+
+<script src="admin/assets/js/jquery.min.js "></script>
+ 
+<script>
+    
+    $(document).ready(function(){
+        var currentTime = new Date();
+        var monthArray = new Array ("January","February","March","April","May","June","July","August","September","October","November","December");
+        var month = currentTime.getMonth();
+        var theMonth = monthArray[month];
+        var day = currentTime.getDate();
+        var year = currentTime.getFullYear();
+        var dateString= day + " " + theMonth + " " + year;
+        var niceName ="User Name";
+
+        var contents = "<!doctype html><html><head><style>@media print{ @page {size: landscape; margin: auto;}";
+            contents += "<style type='text/css'>";
+            contents += "</style>";
+            contents += "<body>";
+            contents += "<div style='background: url(admin/assets/images/certificate.jpg);background-size: 100% 100%;'>";
+            contents += "<div style='margin-top: 2em;    justify-content: center;display: flex;padding-top: 4px '><img src='assets/images/logo.png' width='100' height='100'/></div>";
+            contents +="<div style='padding: 1em;'>"
+            contents +="<h2 style='font-family:auto;text-align:center;text-decoration-line: underline;'>CERTIFICATE</h2>"
+            contents += "<div><p class='bodytext'><center><h4>This certificate has been awarded to<h4> </p></div>";
+            contents += "<div><center><h2 style='color:#330066;'>"+niceName+"</h2></div>";
+            contents += "<div><p class='bodytext; color:#F10408;'><center><h4> For successfully completing the course </h4></p></div>";
+            contents += "<div><p class='bodytext'><center><h3  style='color:#660033;'>BUILDING A POSITIVE WORKPLACE CULTURE</h3> </p></div>";
+            contents  += "<div style='margin-bottom:6em;'><center><h6><p class='normalred'; style='color:#FF0000; padding-bottom: 2em;'>Award Date:    '"+dateString+"'</p></h6>";
+            // contents += "<div style='float:left;'><br><br><img src='#'/></div>";
+            // contents += "<div style='float:left;text-align:center;position:relative;left:20%; '><img src='#' width='150' height='150'/></div>";
+            contents += "<div style='float: right;padding-right: 9em;padding-bottom:3em' >Training Manager</div></div>";
+            contents += "<div>";
+            contents += "<div>";
+            contents += "</body>";
+            contents += "</html>";
+
+
+            document.getElementById("certi").innerHTML = contents
+        // $("#certificate").click(function() {
+        //     document.getElementById("certi").innerHTML = contents
+        //     // $("#downloadPDF").show();
+
+           
+
+        // });
+
+        $("#downloadPDF").click(function() {
+            var divContents = $("#certi").html();
+            var printWindow = window.open('', '', 'height=800,width=800');
+            printWindow.document.write(divContents);
+            printWindow.document.close();
+            printWindow.print();
+        });
+  
+})
+ 
+</script>

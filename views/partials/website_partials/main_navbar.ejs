@@ -1,0 +1,170 @@
+
+<%if(login==true){%>
+
+    <%} else{%> 
+
+<header class="header rs-nav">
+    <div class="top-bar">
+        <div class="container">
+            <div class="row d-flex justify-content-between">
+                <div class="topbar-left">
+                    <ul>
+                        <li><a href="/faq"><i class="fa fa-question-circle"></i>Ask a Question</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-envelope-o"></i>contact@studeebee.com</a></li>
+                    </ul>
+                </div>
+                <div class="topbar-right">
+                    <ul>
+                        <% if (isAuth) { %>
+                        <%} else {%>
+                            <li><a href="/instructor/login">Instructor</a></li>
+                            <li><a href="/user/login">Login</a></li>
+                            <li><a href="/user/register">Register</a></li>
+                        <% } %>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sticky-header navbar-expand-lg">
+        <div class="menu-bar clearfix">
+            <div class="container clearfix">
+                <!-- Header Logo ==== -->
+                <div class="menu-logo">
+                    <a href="/home"><img src="assets/images/logo.png" alt="company logo"></a>
+                </div>
+                <!-- Mobile Nav Button ==== -->
+                <button class="navbar-toggler collapsed menuicon justify-content-end" type="button" data-toggle="collapse" data-target="#menuDropdown" aria-controls="menuDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <!-- Author Nav ==== -->
+                <div class="secondary-menu">
+                    <div class="secondary-inner">
+                        <ul>
+                            <li><a href="https://www.facebook.com/studeebee/" class="btn-link"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="https://www.instagram.com/studeebeelearning/?hl=en" class="btn-link"><i class="fa fa-instagram"></i></a></li>
+                            <li><a href="https://www.linkedin.com/company/studeebee" class="btn-link"><i class="fa fa-linkedin"></i></a></li>
+                            <!-- Search Button ==== -->
+                            <li class="search-btn"><button id="quik-search-btn" type="button" class="btn-link"><i class="fa fa-search"></i></button></li>
+                        </ul>
+                    </div>
+                    <div class="ttr-header-right ttr-with-seperator">
+                        <!-- header right menu start -->
+                        <ul class="ttr-header-navigation">
+                            <!-- <li>
+                                <a href="#" class="ttr-material-button ttr-submenu-toggle" style="color: #29303B;padding-top: 4px;"><i class="fa fa-bell"></i></a>
+                                <div class="ttr-header-submenu noti-menu">
+                                    <div class="ttr-notify-header">
+                                        <span class="ttr-notify-text-top">9 New</span>
+                                        <span class="ttr-notify-text">User Notifications</span>
+                                    </div>
+                                </div>
+                            </li> -->
+                            <li>
+                                <%if ( isAuth==true){%>
+                                <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img src="/uploads/<%= user[0].image %>"style="                                    
+                                    height: 30px;
+                                    width: 121%;" alt=""/></span></a>
+                                <div class="ttr-header-submenu">
+                                    <% if (user[0].role==='student') { %>
+                                        <ul>
+                                        
+                                            <li><a href="/user/dashboard">My Dashboard</a></li>
+                                           
+                                            <li><a href="/user/logout">Logout</a></li>
+                                        </ul>
+                                    <% } else if (user[0].role==='admin') { %>
+                                        <ul>
+                                        
+                                            <li><a href="/admin/dashboard">My Dashboard</a></li>
+                                           
+                                            <li><a href="/admin/logout">Logout</a></li>
+                                        </ul>
+                                    
+                                        <%} else{%>
+                                    <ul>
+                                        
+                                        <li><a href="/instructor/">My Dashboard</a></li>
+                                       
+                                        <li><a href="/instructor/logout">Logout</a></li>
+                                    </ul>
+                                    <% } %>
+                                   
+                                    
+                                       
+                                        
+                                </div>
+                                <%} else{%>
+                                    <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img src="/assets/images/favicon.png"style="                                    
+                                        height: 100%;
+                                        width: 121%;" alt=""/></span></a>
+                                    <div class="ttr-header-submenu" >
+                                         <ul>
+                                            <li><a href="/user/register"><span class="fa fa-user"></span>SignUp</a></li>
+                                            <li><a href="/user/login"><span class="fa fa-sign-in"></span>Login</a></li>
+                                        </ul>
+                                    </div>
+                                <%}%>
+                            </li>
+                        </ul>
+                        <!-- header right menu end -->
+                    </div>
+                    <!-- <img src="..." alt="" class="rounded-circle"><span>dharmikvalani57@gmail.com</span> -->
+                </div>
+
+
+
+                <!-- Search Box ==== -->
+                <div class="nav-search-bar">
+                    <form action="#">
+                        <input name="search" value="" type="text" class="form-control" placeholder="Type to search">
+                        <span><i class="ti-search"></i></span>
+                    </form>
+                    <span id="search-remove"><i class="ti-close"></i></span>
+                </div>
+                <!-- Navigation Menu ==== -->
+                <div class="menu-links navbar-collapse collapse justify-content-start" id="menuDropdown">
+                    <div class="menu-logo">
+                        <a href="/home"><img src="assets/images/logo.png" alt=""></a>
+                    </div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/home">Home</a></li>
+                        <li><a href="/live-classes">Live Classes</a></li>
+                        <li><a href="/courses">Courses</a></li>
+                        <li><a href="/blogs">Blogs</a></li>
+                        <li><a href="/contact-us">Contact us</a></li>
+                        <li><a href="/faq">FAQs</a></li>
+                        <li><a href="/about-us">About us</a></li>
+						<li><a href="/pro-coder">Pro-coder</a></li>
+						
+                    </ul>
+                    <div class="nav-social-link">
+                        <a href="https://www.facebook.com/studeebee/"><i class="fa fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/studeebeelearning/?hl=en"><i class="fa fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/studeebee"><i class="fa fa-linkedin"></i></a>
+                    </div>
+
+                </div>
+
+                <!-- Navigation Menu END ==== -->
+            </div>
+        </div>
+    </div>
+	<!--Start of Tawk.to Script-->
+<!--<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/5f8abad7fd4ff5477ea6aa0d/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>-->
+<!--End of Tawk.to Script-->
+</header>
+<%}%>

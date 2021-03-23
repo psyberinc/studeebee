@@ -1,0 +1,1 @@
+!function(c){c(document).ready(function(){c(".ac-label").click(function(e){e.preventDefault(),$check=c(this).prev(),$check.prop("checked")?$check.prop("checked",!1):$check.prop("checked",!0)})})}(jQuery);
